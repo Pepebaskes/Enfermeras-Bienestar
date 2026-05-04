@@ -1,0 +1,502 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/app/pages/PersonDetailPage.tsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=a29962d8"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+let prevRefreshReg;
+let prevRefreshSig;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  prevRefreshReg = window.$RefreshReg$;
+  prevRefreshSig = window.$RefreshSig$;
+  window.$RefreshReg$ = RefreshRuntime.getRefreshReg("C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx");
+  window.$RefreshSig$ = RefreshRuntime.createSignatureFunctionForTransform;
+}
+var _s = $RefreshSig$();
+import { useNavigate, useParams } from "/node_modules/.vite/deps/react-router.js?v=a29962d8";
+import { StatusTags } from "/src/app/components/StatusTags.tsx";
+import { Button } from "/src/app/components/ui/button.tsx";
+import { Card, CardContent, CardHeader, CardTitle } from "/src/app/components/ui/card.tsx";
+import { ArrowLeft, Edit, MapPin, Phone, Calendar, FileText, Clock } from "/node_modules/.vite/deps/lucide-react.js?v=a29962d8";
+import { toast } from "/node_modules/.vite/deps/sonner.js?v=a29962d8";
+export function PersonDetailPage({ persons, onMarkVisited }) {
+  _s();
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const person = persons.find((p) => p.id === id);
+  if (!person) {
+    return /* @__PURE__ */ jsxDEV("div", { className: "p-4 md:p-6", children: /* @__PURE__ */ jsxDEV("div", { className: "text-center py-12", children: [
+      /* @__PURE__ */ jsxDEV("p", { className: "text-gray-600", children: "Registro no encontrado" }, void 0, false, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+        lineNumber: 43,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV(
+        Button,
+        {
+          onClick: () => navigate("/personas"),
+          className: "mt-4",
+          children: "Volver al listado"
+        },
+        void 0,
+        false,
+        {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+          lineNumber: 44,
+          columnNumber: 11
+        },
+        this
+      )
+    ] }, void 0, true, {
+      fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+      lineNumber: 42,
+      columnNumber: 9
+    }, this) }, void 0, false, {
+      fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+      lineNumber: 41,
+      columnNumber: 7
+    }, this);
+  }
+  const handleMarkVisited = () => {
+    onMarkVisited(person.id);
+    toast.success("Registro marcado como visitado");
+  };
+  const handleCopyInfo = () => {
+    const info = `
+Nombre: ${person.nombreCompleto}
+Domicilio: ${person.calle} ${person.numeroCasa}, ${person.colonia}
+Teléfono: ${person.telefono || "No disponible"}
+    `.trim();
+    navigator.clipboard.writeText(info);
+    toast.success("Información copiada al portapapeles");
+  };
+  return /* @__PURE__ */ jsxDEV("div", { className: "space-y-6 p-4 md:p-6 max-w-4xl mx-auto", children: [
+    /* @__PURE__ */ jsxDEV("div", { className: "flex items-center justify-between", children: [
+      /* @__PURE__ */ jsxDEV("div", { className: "flex items-center gap-4", children: /* @__PURE__ */ jsxDEV(
+        Button,
+        {
+          variant: "ghost",
+          size: "sm",
+          onClick: () => navigate(-1),
+          children: [
+            /* @__PURE__ */ jsxDEV(ArrowLeft, { className: "h-4 w-4 mr-1" }, void 0, false, {
+              fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+              lineNumber: 80,
+              columnNumber: 13
+            }, this),
+            "Volver"
+          ]
+        },
+        void 0,
+        true,
+        {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+          lineNumber: 75,
+          columnNumber: 11
+        },
+        this
+      ) }, void 0, false, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+        lineNumber: 74,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV(
+        Button,
+        {
+          onClick: () => navigate(`/personas/${person.id}/editar`),
+          size: "sm",
+          children: [
+            /* @__PURE__ */ jsxDEV(Edit, { className: "h-4 w-4 mr-1" }, void 0, false, {
+              fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+              lineNumber: 88,
+              columnNumber: 11
+            }, this),
+            "Editar"
+          ]
+        },
+        void 0,
+        true,
+        {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+          lineNumber: 84,
+          columnNumber: 9
+        },
+        this
+      )
+    ] }, void 0, true, {
+      fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+      lineNumber: 73,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("div", { children: [
+      /* @__PURE__ */ jsxDEV("h1", { className: "text-3xl", children: person.nombreCompleto }, void 0, false, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+        lineNumber: 94,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV(StatusTags, { estados: person.estados, className: "mt-3" }, void 0, false, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+        lineNumber: 95,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+      lineNumber: 93,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV(Card, { children: [
+      /* @__PURE__ */ jsxDEV(CardHeader, { children: /* @__PURE__ */ jsxDEV(CardTitle, { className: "flex items-center gap-2", children: [
+        /* @__PURE__ */ jsxDEV(MapPin, { className: "h-5 w-5" }, void 0, false, {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+          lineNumber: 101,
+          columnNumber: 13
+        }, this),
+        "Domicilio"
+      ] }, void 0, true, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+        lineNumber: 100,
+        columnNumber: 11
+      }, this) }, void 0, false, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+        lineNumber: 99,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV(CardContent, { className: "space-y-2", children: [
+        /* @__PURE__ */ jsxDEV("div", { children: [
+          /* @__PURE__ */ jsxDEV("span", { className: "text-sm text-gray-600", children: "Calle:" }, void 0, false, {
+            fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+            lineNumber: 107,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("p", { className: "text-base", children: person.calle }, void 0, false, {
+            fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+            lineNumber: 108,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+          lineNumber: 106,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { children: [
+          /* @__PURE__ */ jsxDEV("span", { className: "text-sm text-gray-600", children: "Número:" }, void 0, false, {
+            fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+            lineNumber: 111,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("p", { className: "text-base", children: person.numeroCasa || "No especificado" }, void 0, false, {
+            fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+            lineNumber: 112,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+          lineNumber: 110,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { children: [
+          /* @__PURE__ */ jsxDEV("span", { className: "text-sm text-gray-600", children: "Colonia:" }, void 0, false, {
+            fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+            lineNumber: 115,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("p", { className: "text-base", children: person.colonia }, void 0, false, {
+            fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+            lineNumber: 116,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+          lineNumber: 114,
+          columnNumber: 11
+        }, this),
+        person.referencias && /* @__PURE__ */ jsxDEV("div", { children: [
+          /* @__PURE__ */ jsxDEV("span", { className: "text-sm text-gray-600", children: "Referencias:" }, void 0, false, {
+            fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+            lineNumber: 120,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV("p", { className: "text-base", children: person.referencias }, void 0, false, {
+            fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+            lineNumber: 121,
+            columnNumber: 15
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+          lineNumber: 119,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+        lineNumber: 105,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+      lineNumber: 98,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV(Card, { children: [
+      /* @__PURE__ */ jsxDEV(CardHeader, { children: /* @__PURE__ */ jsxDEV(CardTitle, { className: "flex items-center gap-2", children: [
+        /* @__PURE__ */ jsxDEV(Phone, { className: "h-5 w-5" }, void 0, false, {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+          lineNumber: 130,
+          columnNumber: 13
+        }, this),
+        "Contacto"
+      ] }, void 0, true, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+        lineNumber: 129,
+        columnNumber: 11
+      }, this) }, void 0, false, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+        lineNumber: 128,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV(CardContent, { children: /* @__PURE__ */ jsxDEV("div", { children: [
+        /* @__PURE__ */ jsxDEV("span", { className: "text-sm text-gray-600", children: "Teléfono:" }, void 0, false, {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+          lineNumber: 136,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV("p", { className: "text-base", children: person.telefono || "No disponible" }, void 0, false, {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+          lineNumber: 137,
+          columnNumber: 13
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+        lineNumber: 135,
+        columnNumber: 11
+      }, this) }, void 0, false, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+        lineNumber: 134,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+      lineNumber: 127,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV(Card, { children: [
+      /* @__PURE__ */ jsxDEV(CardHeader, { children: /* @__PURE__ */ jsxDEV(CardTitle, { className: "flex items-center gap-2", children: [
+        /* @__PURE__ */ jsxDEV(Calendar, { className: "h-5 w-5" }, void 0, false, {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+          lineNumber: 145,
+          columnNumber: 13
+        }, this),
+        "Información de Visita"
+      ] }, void 0, true, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+        lineNumber: 144,
+        columnNumber: 11
+      }, this) }, void 0, false, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+        lineNumber: 143,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV(CardContent, { className: "space-y-2", children: [
+        /* @__PURE__ */ jsxDEV("div", { children: [
+          /* @__PURE__ */ jsxDEV("span", { className: "text-sm text-gray-600", children: "Fecha de visita:" }, void 0, false, {
+            fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+            lineNumber: 151,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("p", { className: "text-base", children: person.fechaVisita ? new Date(person.fechaVisita).toLocaleDateString("es-MX") : "No visitado aún" }, void 0, false, {
+            fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+            lineNumber: 152,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+          lineNumber: 150,
+          columnNumber: 11
+        }, this),
+        person.enfermera && /* @__PURE__ */ jsxDEV("div", { children: [
+          /* @__PURE__ */ jsxDEV("span", { className: "text-sm text-gray-600", children: "Enfermera responsable:" }, void 0, false, {
+            fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+            lineNumber: 161,
+            columnNumber: 15
+          }, this),
+          /* @__PURE__ */ jsxDEV("p", { className: "text-base", children: person.enfermera }, void 0, false, {
+            fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+            lineNumber: 162,
+            columnNumber: 15
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+          lineNumber: 160,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+        lineNumber: 149,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+      lineNumber: 142,
+      columnNumber: 7
+    }, this),
+    person.observaciones && /* @__PURE__ */ jsxDEV(Card, { children: [
+      /* @__PURE__ */ jsxDEV(CardHeader, { children: /* @__PURE__ */ jsxDEV(CardTitle, { className: "flex items-center gap-2", children: [
+        /* @__PURE__ */ jsxDEV(FileText, { className: "h-5 w-5" }, void 0, false, {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+          lineNumber: 172,
+          columnNumber: 15
+        }, this),
+        "Observaciones"
+      ] }, void 0, true, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+        lineNumber: 171,
+        columnNumber: 13
+      }, this) }, void 0, false, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+        lineNumber: 170,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ jsxDEV(CardContent, { children: /* @__PURE__ */ jsxDEV("p", { className: "text-base whitespace-pre-wrap", children: person.observaciones }, void 0, false, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+        lineNumber: 177,
+        columnNumber: 13
+      }, this) }, void 0, false, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+        lineNumber: 176,
+        columnNumber: 11
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+      lineNumber: 169,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV(Card, { children: [
+      /* @__PURE__ */ jsxDEV(CardHeader, { children: /* @__PURE__ */ jsxDEV(CardTitle, { className: "flex items-center gap-2", children: [
+        /* @__PURE__ */ jsxDEV(Clock, { className: "h-5 w-5" }, void 0, false, {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+          lineNumber: 185,
+          columnNumber: 13
+        }, this),
+        "Historial"
+      ] }, void 0, true, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+        lineNumber: 184,
+        columnNumber: 11
+      }, this) }, void 0, false, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+        lineNumber: 183,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV(CardContent, { className: "space-y-2", children: [
+        /* @__PURE__ */ jsxDEV("div", { children: [
+          /* @__PURE__ */ jsxDEV("span", { className: "text-sm text-gray-600", children: "Fecha de creación:" }, void 0, false, {
+            fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+            lineNumber: 191,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("p", { className: "text-base", children: new Date(person.fechaCreacion).toLocaleString("es-MX") }, void 0, false, {
+            fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+            lineNumber: 192,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+          lineNumber: 190,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { children: [
+          /* @__PURE__ */ jsxDEV("span", { className: "text-sm text-gray-600", children: "Última actualización:" }, void 0, false, {
+            fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+            lineNumber: 197,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("p", { className: "text-base", children: new Date(person.ultimaActualizacion).toLocaleString("es-MX") }, void 0, false, {
+            fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+            lineNumber: 198,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+          lineNumber: 196,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+        lineNumber: 189,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+      lineNumber: 182,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-3", children: [
+      !person.fechaVisita && /* @__PURE__ */ jsxDEV(
+        Button,
+        {
+          onClick: handleMarkVisited,
+          size: "lg",
+          className: "h-12",
+          children: "Marcar como Visitado"
+        },
+        void 0,
+        false,
+        {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+          lineNumber: 207,
+          columnNumber: 9
+        },
+        this
+      ),
+      /* @__PURE__ */ jsxDEV(
+        Button,
+        {
+          onClick: handleCopyInfo,
+          variant: "outline",
+          size: "lg",
+          className: "h-12",
+          children: "Copiar Información"
+        },
+        void 0,
+        false,
+        {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+          lineNumber: 215,
+          columnNumber: 9
+        },
+        this
+      )
+    ] }, void 0, true, {
+      fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+      lineNumber: 205,
+      columnNumber: 7
+    }, this)
+  ] }, void 0, true, {
+    fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx",
+    lineNumber: 72,
+    columnNumber: 5
+  }, this);
+}
+_s(PersonDetailPage, "xqNrWMz2XDR0DYvZC039aFe98pM=", false, function() {
+  return [useNavigate, useParams];
+});
+_c = PersonDetailPage;
+var _c;
+$RefreshReg$(_c, "PersonDetailPage");
+if (import.meta.hot && !inWebWorker) {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+if (import.meta.hot && !inWebWorker) {
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/pages/PersonDetailPage.tsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+
+//# sourceMappingURL=data:application/json;base64,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QUFBQSxRQUFDO0FBQUE7QUFBQSxVQUNDLFNBQVNFO0FBQUFBLFVBQ1QsU0FBUTtBQUFBLFVBQ1IsTUFBSztBQUFBLFVBQ0wsV0FBVTtBQUFBLFVBQU07QUFBQTtBQUFBLFFBSmxCO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQSxNQU9BO0FBQUEsU0FqQkY7QUFBQTtBQUFBO0FBQUE7QUFBQSxXQWtCQTtBQUFBLE9BdkpGO0FBQUE7QUFBQTtBQUFBO0FBQUEsU0F3SkE7QUFFSjtBQUFDUixHQWpNZUgsa0JBQWdCO0FBQUEsVUFDYmhCLGFBQ0ZDLFNBQVM7QUFBQTtBQUFBLEtBRlZlO0FBQWdCLElBQUFnQztBQUFBLGFBQUFBLElBQUEiLCJuYW1lcyI6WyJ1c2VOYXZpZ2F0ZSIsInVzZVBhcmFtcyIsIlN0YXR1c1RhZ3MiLCJCdXR0b24iLCJDYXJkIiwiQ2FyZENvbnRlbnQiLCJDYXJkSGVhZGVyIiwiQ2FyZFRpdGxlIiwiQXJyb3dMZWZ0IiwiRWRpdCIsIk1hcFBpbiIsIlBob25lIiwiQ2FsZW5kYXIiLCJGaWxlVGV4dCIsIkNsb2NrIiwidG9hc3QiLCJQZXJzb25EZXRhaWxQYWdlIiwicGVyc29ucyIsIm9uTWFya1Zpc2l0ZWQiLCJfcyIsIm5hdmlnYXRlIiwiaWQiLCJwZXJzb24iLCJmaW5kIiwicCIsImhhbmRsZU1hcmtWaXNpdGVkIiwic3VjY2VzcyIsImhhbmRsZUNvcHlJbmZvIiwiaW5mbyIsIm5vbWJyZUNvbXBsZXRvIiwiY2FsbGUiLCJudW1lcm9DYXNhIiwiY29sb25pYSIsInRlbGVmb25vIiwidHJpbSIsIm5hdmlnYXRvciIsImNsaXBib2FyZCIsIndyaXRlVGV4dCIsImVzdGFkb3MiLCJyZWZlcmVuY2lhcyIsImZlY2hhVmlzaXRhIiwiRGF0ZSIsInRvTG9jYWxlRGF0ZVN0cmluZyIsImVuZmVybWVyYSIsIm9ic2VydmFjaW9uZXMiLCJmZWNoYUNyZWFjaW9uIiwidG9Mb2NhbGVTdHJpbmciLCJ1bHRpbWFBY3R1YWxpemFjaW9uIiwiX2MiXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZXMiOlsiUGVyc29uRGV0YWlsUGFnZS50c3giXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgdXNlTmF2aWdhdGUsIHVzZVBhcmFtcyB9IGZyb20gJ3JlYWN0LXJvdXRlcic7XG5pbXBvcnQgeyBQZXJzb24gfSBmcm9tICcuLi9tb2RlbHMvcGVyc29uLm1vZGVsJztcbmltcG9ydCB7IFN0YXR1c1RhZ3MgfSBmcm9tICcuLi9jb21wb25lbnRzL1N0YXR1c1RhZ3MnO1xuaW1wb3J0IHsgQnV0dG9uIH0gZnJvbSAnLi4vY29tcG9uZW50cy91aS9idXR0b24nO1xuaW1wb3J0IHsgQ2FyZCwgQ2FyZENvbnRlbnQsIENhcmRIZWFkZXIsIENhcmRUaXRsZSB9IGZyb20gJy4uL2NvbXBvbmVudHMvdWkvY2FyZCc7XG5pbXBvcnQgeyBBcnJvd0xlZnQsIEVkaXQsIE1hcFBpbiwgUGhvbmUsIENhbGVuZGFyLCBVc2VyLCBGaWxlVGV4dCwgQ2xvY2sgfSBmcm9tICdsdWNpZGUtcmVhY3QnO1xuaW1wb3J0IHsgdG9hc3QgfSBmcm9tICdzb25uZXInO1xuXG5pbnRlcmZhY2UgUGVyc29uRGV0YWlsUGFnZVByb3BzIHtcbiAgcGVyc29uczogUGVyc29uW107XG4gIG9uTWFya1Zpc2l0ZWQ6IChwZXJzb25JZDogc3RyaW5nKSA9PiB2b2lkO1xufVxuXG5leHBvcnQgZnVuY3Rpb24gUGVyc29uRGV0YWlsUGFnZSh7IHBlcnNvbnMsIG9uTWFya1Zpc2l0ZWQgfTogUGVyc29uRGV0YWlsUGFnZVByb3BzKSB7XG4gIGNvbnN0IG5hdmlnYXRlID0gdXNlTmF2aWdhdGUoKTtcbiAgY29uc3QgeyBpZCB9ID0gdXNlUGFyYW1zKCk7XG5cbiAgY29uc3QgcGVyc29uID0gcGVyc29ucy5maW5kKHAgPT4gcC5pZCA9PT0gaWQpO1xuXG4gIGlmICghcGVyc29uKSB7XG4gICAgcmV0dXJuIChcbiAgICAgIDxkaXYgY2xhc3NOYW1lPVwicC00IG1kOnAtNlwiPlxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cInRleHQtY2VudGVyIHB5LTEyXCI+XG4gICAgICAgICAgPHAgY2xhc3NOYW1lPVwidGV4dC1ncmF5LTYwMFwiPlJlZ2lzdHJvIG5vIGVuY29udHJhZG88L3A+XG4gICAgICAgICAgPEJ1dHRvblxuICAgICAgICAgICAgb25DbGljaz17KCkgPT4gbmF2aWdhdGUoJy9wZXJzb25hcycpfVxuICAgICAgICAgICAgY2xhc3NOYW1lPVwibXQtNFwiXG4gICAgICAgICAgPlxuICAgICAgICAgICAgVm9sdmVyIGFsIGxpc3RhZG9cbiAgICAgICAgICA8L0J1dHRvbj5cbiAgICAgICAgPC9kaXY+XG4gICAgICA8L2Rpdj5cbiAgICApO1xuICB9XG5cbiAgY29uc3QgaGFuZGxlTWFya1Zpc2l0ZWQgPSAoKSA9PiB7XG4gICAgb25NYXJrVmlzaXRlZChwZXJzb24uaWQpO1xuICAgIHRvYXN0LnN1Y2Nlc3MoJ1JlZ2lzdHJvIG1hcmNhZG8gY29tbyB2aXNpdGFkbycpO1xuICB9O1xuXG4gIGNvbnN0IGhhbmRsZUNvcHlJbmZvID0gKCkgPT4ge1xuICAgIGNvbnN0IGluZm8gPSBgXG5Ob21icmU6ICR7cGVyc29uLm5vbWJyZUNvbXBsZXRvfVxuRG9taWNpbGlvOiAke3BlcnNvbi5jYWxsZX0gJHtwZXJzb24ubnVtZXJvQ2FzYX0sICR7cGVyc29uLmNvbG9uaWF9XG5UZWzDqWZvbm86ICR7cGVyc29uLnRlbGVmb25vIHx8ICdObyBkaXNwb25pYmxlJ31cbiAgICBgLnRyaW0oKTtcblxuICAgIG5hdmlnYXRvci5jbGlwYm9hcmQud3JpdGVUZXh0KGluZm8pO1xuICAgIHRvYXN0LnN1Y2Nlc3MoJ0luZm9ybWFjacOzbiBjb3BpYWRhIGFsIHBvcnRhcGFwZWxlcycpO1xuICB9O1xuXG4gIHJldHVybiAoXG4gICAgPGRpdiBjbGFzc05hbWU9XCJzcGFjZS15LTYgcC00IG1kOnAtNiBtYXgtdy00eGwgbXgtYXV0b1wiPlxuICAgICAgPGRpdiBjbGFzc05hbWU9XCJmbGV4IGl0ZW1zLWNlbnRlciBqdXN0aWZ5LWJldHdlZW5cIj5cbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJmbGV4IGl0ZW1zLWNlbnRlciBnYXAtNFwiPlxuICAgICAgICAgIDxCdXR0b25cbiAgICAgICAgICAgIHZhcmlhbnQ9XCJnaG9zdFwiXG4gICAgICAgICAgICBzaXplPVwic21cIlxuICAgICAgICAgICAgb25DbGljaz17KCkgPT4gbmF2aWdhdGUoLTEpfVxuICAgICAgICAgID5cbiAgICAgICAgICAgIDxBcnJvd0xlZnQgY2xhc3NOYW1lPVwiaC00IHctNCBtci0xXCIgLz5cbiAgICAgICAgICAgIFZvbHZlclxuICAgICAgICAgIDwvQnV0dG9uPlxuICAgICAgICA8L2Rpdj5cbiAgICAgICAgPEJ1dHRvblxuICAgICAgICAgIG9uQ2xpY2s9eygpID0+IG5hdmlnYXRlKGAvcGVyc29uYXMvJHtwZXJzb24uaWR9L2VkaXRhcmApfVxuICAgICAgICAgIHNpemU9XCJzbVwiXG4gICAgICAgID5cbiAgICAgICAgICA8RWRpdCBjbGFzc05hbWU9XCJoLTQgdy00IG1yLTFcIiAvPlxuICAgICAgICAgIEVkaXRhclxuICAgICAgICA8L0J1dHRvbj5cbiAgICAgIDwvZGl2PlxuXG4gICAgICA8ZGl2PlxuICAgICAgICA8aDEgY2xhc3NOYW1lPVwidGV4dC0zeGxcIj57cGVyc29uLm5vbWJyZUNvbXBsZXRvfTwvaDE+XG4gICAgICAgIDxTdGF0dXNUYWdzIGVzdGFkb3M9e3BlcnNvbi5lc3RhZG9zfSBjbGFzc05hbWU9XCJtdC0zXCIgLz5cbiAgICAgIDwvZGl2PlxuXG4gICAgICA8Q2FyZD5cbiAgICAgICAgPENhcmRIZWFkZXI+XG4gICAgICAgICAgPENhcmRUaXRsZSBjbGFzc05hbWU9XCJmbGV4IGl0ZW1zLWNlbnRlciBnYXAtMlwiPlxuICAgICAgICAgICAgPE1hcFBpbiBjbGFzc05hbWU9XCJoLTUgdy01XCIgLz5cbiAgICAgICAgICAgIERvbWljaWxpb1xuICAgICAgICAgIDwvQ2FyZFRpdGxlPlxuICAgICAgICA8L0NhcmRIZWFkZXI+XG4gICAgICAgIDxDYXJkQ29udGVudCBjbGFzc05hbWU9XCJzcGFjZS15LTJcIj5cbiAgICAgICAgICA8ZGl2PlxuICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwidGV4dC1zbSB0ZXh0LWdyYXktNjAwXCI+Q2FsbGU6PC9zcGFuPlxuICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwidGV4dC1iYXNlXCI+e3BlcnNvbi5jYWxsZX08L3A+XG4gICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgPGRpdj5cbiAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cInRleHQtc20gdGV4dC1ncmF5LTYwMFwiPk7Dum1lcm86PC9zcGFuPlxuICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwidGV4dC1iYXNlXCI+e3BlcnNvbi5udW1lcm9DYXNhIHx8ICdObyBlc3BlY2lmaWNhZG8nfTwvcD5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICA8ZGl2PlxuICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwidGV4dC1zbSB0ZXh0LWdyYXktNjAwXCI+Q29sb25pYTo8L3NwYW4+XG4gICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJ0ZXh0LWJhc2VcIj57cGVyc29uLmNvbG9uaWF9PC9wPlxuICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgIHtwZXJzb24ucmVmZXJlbmNpYXMgJiYgKFxuICAgICAgICAgICAgPGRpdj5cbiAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwidGV4dC1zbSB0ZXh0LWdyYXktNjAwXCI+UmVmZXJlbmNpYXM6PC9zcGFuPlxuICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJ0ZXh0LWJhc2VcIj57cGVyc29uLnJlZmVyZW5jaWFzfTwvcD5cbiAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgICl9XG4gICAgICAgIDwvQ2FyZENvbnRlbnQ+XG4gICAgICA8L0NhcmQ+XG5cbiAgICAgIDxDYXJkPlxuICAgICAgICA8Q2FyZEhlYWRlcj5cbiAgICAgICAgICA8Q2FyZFRpdGxlIGNsYXNzTmFtZT1cImZsZXggaXRlbXMtY2VudGVyIGdhcC0yXCI+XG4gICAgICAgICAgICA8UGhvbmUgY2xhc3NOYW1lPVwiaC01IHctNVwiIC8+XG4gICAgICAgICAgICBDb250YWN0b1xuICAgICAgICAgIDwvQ2FyZFRpdGxlPlxuICAgICAgICA8L0NhcmRIZWFkZXI+XG4gICAgICAgIDxDYXJkQ29udGVudD5cbiAgICAgICAgICA8ZGl2PlxuICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwidGV4dC1zbSB0ZXh0LWdyYXktNjAwXCI+VGVsw6lmb25vOjwvc3Bhbj5cbiAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cInRleHQtYmFzZVwiPntwZXJzb24udGVsZWZvbm8gfHwgJ05vIGRpc3BvbmlibGUnfTwvcD5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgPC9DYXJkQ29udGVudD5cbiAgICAgIDwvQ2FyZD5cblxuICAgICAgPENhcmQ+XG4gICAgICAgIDxDYXJkSGVhZGVyPlxuICAgICAgICAgIDxDYXJkVGl0bGUgY2xhc3NOYW1lPVwiZmxleCBpdGVtcy1jZW50ZXIgZ2FwLTJcIj5cbiAgICAgICAgICAgIDxDYWxlbmRhciBjbGFzc05hbWU9XCJoLTUgdy01XCIgLz5cbiAgICAgICAgICAgIEluZm9ybWFjacOzbiBkZSBWaXNpdGFcbiAgICAgICAgICA8L0NhcmRUaXRsZT5cbiAgICAgICAgPC9DYXJkSGVhZGVyPlxuICAgICAgICA8Q2FyZENvbnRlbnQgY2xhc3NOYW1lPVwic3BhY2UteS0yXCI+XG4gICAgICAgICAgPGRpdj5cbiAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cInRleHQtc20gdGV4dC1ncmF5LTYwMFwiPkZlY2hhIGRlIHZpc2l0YTo8L3NwYW4+XG4gICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJ0ZXh0LWJhc2VcIj5cbiAgICAgICAgICAgICAge3BlcnNvbi5mZWNoYVZpc2l0YVxuICAgICAgICAgICAgICAgID8gbmV3IERhdGUocGVyc29uLmZlY2hhVmlzaXRhKS50b0xvY2FsZURhdGVTdHJpbmcoJ2VzLU1YJylcbiAgICAgICAgICAgICAgICA6ICdObyB2aXNpdGFkbyBhw7puJ1xuICAgICAgICAgICAgICB9XG4gICAgICAgICAgICA8L3A+XG4gICAgICAgICAgPC9kaXY+XG4gICAgICAgICAge3BlcnNvbi5lbmZlcm1lcmEgJiYgKFxuICAgICAgICAgICAgPGRpdj5cbiAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPVwidGV4dC1zbSB0ZXh0LWdyYXktNjAwXCI+RW5mZXJtZXJhIHJlc3BvbnNhYmxlOjwvc3Bhbj5cbiAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwidGV4dC1iYXNlXCI+e3BlcnNvbi5lbmZlcm1lcmF9PC9wPlxuICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgKX1cbiAgICAgICAgPC9DYXJkQ29udGVudD5cbiAgICAgIDwvQ2FyZD5cblxuICAgICAge3BlcnNvbi5vYnNlcnZhY2lvbmVzICYmIChcbiAgICAgICAgPENhcmQ+XG4gICAgICAgICAgPENhcmRIZWFkZXI+XG4gICAgICAgICAgICA8Q2FyZFRpdGxlIGNsYXNzTmFtZT1cImZsZXggaXRlbXMtY2VudGVyIGdhcC0yXCI+XG4gICAgICAgICAgICAgIDxGaWxlVGV4dCBjbGFzc05hbWU9XCJoLTUgdy01XCIgLz5cbiAgICAgICAgICAgICAgT2JzZXJ2YWNpb25lc1xuICAgICAgICAgICAgPC9DYXJkVGl0bGU+XG4gICAgICAgICAgPC9DYXJkSGVhZGVyPlxuICAgICAgICAgIDxDYXJkQ29udGVudD5cbiAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cInRleHQtYmFzZSB3aGl0ZXNwYWNlLXByZS13cmFwXCI+e3BlcnNvbi5vYnNlcnZhY2lvbmVzfTwvcD5cbiAgICAgICAgICA8L0NhcmRDb250ZW50PlxuICAgICAgICA8L0NhcmQ+XG4gICAgICApfVxuXG4gICAgICA8Q2FyZD5cbiAgICAgICAgPENhcmRIZWFkZXI+XG4gICAgICAgICAgPENhcmRUaXRsZSBjbGFzc05hbWU9XCJmbGV4IGl0ZW1zLWNlbnRlciBnYXAtMlwiPlxuICAgICAgICAgICAgPENsb2NrIGNsYXNzTmFtZT1cImgtNSB3LTVcIiAvPlxuICAgICAgICAgICAgSGlzdG9yaWFsXG4gICAgICAgICAgPC9DYXJkVGl0bGU+XG4gICAgICAgIDwvQ2FyZEhlYWRlcj5cbiAgICAgICAgPENhcmRDb250ZW50IGNsYXNzTmFtZT1cInNwYWNlLXktMlwiPlxuICAgICAgICAgIDxkaXY+XG4gICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9XCJ0ZXh0LXNtIHRleHQtZ3JheS02MDBcIj5GZWNoYSBkZSBjcmVhY2nDs246PC9zcGFuPlxuICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwidGV4dC1iYXNlXCI+XG4gICAgICAgICAgICAgIHtuZXcgRGF0ZShwZXJzb24uZmVjaGFDcmVhY2lvbikudG9Mb2NhbGVTdHJpbmcoJ2VzLU1YJyl9XG4gICAgICAgICAgICA8L3A+XG4gICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgPGRpdj5cbiAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT1cInRleHQtc20gdGV4dC1ncmF5LTYwMFwiPsOabHRpbWEgYWN0dWFsaXphY2nDs246PC9zcGFuPlxuICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwidGV4dC1iYXNlXCI+XG4gICAgICAgICAgICAgIHtuZXcgRGF0ZShwZXJzb24udWx0aW1hQWN0dWFsaXphY2lvbikudG9Mb2NhbGVTdHJpbmcoJ2VzLU1YJyl9XG4gICAgICAgICAgICA8L3A+XG4gICAgICAgICAgPC9kaXY+XG4gICAgICAgIDwvQ2FyZENvbnRlbnQ+XG4gICAgICA8L0NhcmQ+XG5cbiAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZ3JpZCBncmlkLWNvbHMtMSBtZDpncmlkLWNvbHMtMiBnYXAtM1wiPlxuICAgICAgICB7IXBlcnNvbi5mZWNoYVZpc2l0YSAmJiAoXG4gICAgICAgICAgPEJ1dHRvblxuICAgICAgICAgICAgb25DbGljaz17aGFuZGxlTWFya1Zpc2l0ZWR9XG4gICAgICAgICAgICBzaXplPVwibGdcIlxuICAgICAgICAgICAgY2xhc3NOYW1lPVwiaC0xMlwiXG4gICAgICAgICAgPlxuICAgICAgICAgICAgTWFyY2FyIGNvbW8gVmlzaXRhZG9cbiAgICAgICAgICA8L0J1dHRvbj5cbiAgICAgICAgKX1cbiAgICAgICAgPEJ1dHRvblxuICAgICAgICAgIG9uQ2xpY2s9e2hhbmRsZUNvcHlJbmZvfVxuICAgICAgICAgIHZhcmlhbnQ9XCJvdXRsaW5lXCJcbiAgICAgICAgICBzaXplPVwibGdcIlxuICAgICAgICAgIGNsYXNzTmFtZT1cImgtMTJcIlxuICAgICAgICA+XG4gICAgICAgICAgQ29waWFyIEluZm9ybWFjacOzblxuICAgICAgICA8L0J1dHRvbj5cbiAgICAgIDwvZGl2PlxuICAgIDwvZGl2PlxuICApO1xufVxuIl0sImZpbGUiOiJDOi9Vc2Vycy9yYWZhZS9PbmVEcml2ZS9Fc2NyaXRvcmlvL2RhVGEvbW9kdWxvLWVuZmVybWVyaWEvc3JjL2FwcC9wYWdlcy9QZXJzb25EZXRhaWxQYWdlLnRzeCJ9

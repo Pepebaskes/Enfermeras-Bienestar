@@ -1,0 +1,604 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/@fs/C:\\Users\\rafae\\OneDrive\\Escritorio\\daTa\\modulo-enfermeria\\src\\app\\components\\PersonForm.tsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=a29962d8"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+let prevRefreshReg;
+let prevRefreshSig;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  prevRefreshReg = window.$RefreshReg$;
+  prevRefreshSig = window.$RefreshSig$;
+  window.$RefreshReg$ = RefreshRuntime.getRefreshReg("C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx");
+  window.$RefreshSig$ = RefreshRuntime.createSignatureFunctionForTransform;
+}
+var _s = $RefreshSig$();
+import __vite__cjsImport3_react from "/node_modules/.vite/deps/react.js?v=a29962d8"; const useState = __vite__cjsImport3_react["useState"];
+import { STATUS_LABELS } from "/src/app/models/person.model.ts";
+import { validatePersonForm } from "/src/app/utils/validators.ts";
+import { Button } from "/src/app/components/ui/button.tsx";
+import { Input } from "/src/app/components/ui/input.tsx";
+import { Label } from "/src/app/components/ui/label.tsx";
+import { Textarea } from "/src/app/components/ui/textarea.tsx";
+import { Checkbox } from "/src/app/components/ui/checkbox.tsx";
+import { Card, CardContent, CardHeader, CardTitle } from "/src/app/components/ui/card.tsx";
+const allEstados = [
+  "fuera_del_pais",
+  "sin_visita",
+  "no_encontrado",
+  "no_quiso_programa",
+  "cambio_domicilio"
+];
+export function PersonForm({ person, onSave, onCancel }) {
+  _s();
+  const [formData, setFormData] = useState({
+    nombreCompleto: person?.nombreCompleto || "",
+    calle: person?.calle || "",
+    numeroCasa: person?.numeroCasa || "",
+    colonia: person?.colonia || "",
+    telefono: person?.telefono || "",
+    referencias: person?.referencias || "",
+    observaciones: person?.observaciones || "",
+    estados: person?.estados || [],
+    fechaVisita: person?.fechaVisita || "",
+    enfermera: person?.enfermera || ""
+  });
+  const [errors, setErrors] = useState({});
+  const handleChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[field];
+        return newErrors;
+      });
+    }
+  };
+  const handleEstadoToggle = (estado) => {
+    setFormData((prev) => ({
+      ...prev,
+      estados: prev.estados.includes(estado) ? prev.estados.filter((e) => e !== estado) : [...prev.estados, estado]
+    }));
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const validationErrors = validatePersonForm(formData);
+    if (validationErrors.length > 0) {
+      const errorMap = {};
+      validationErrors.forEach((error) => {
+        errorMap[error.field] = error.message;
+      });
+      setErrors(errorMap);
+      return;
+    }
+    const dataToSave = {
+      ...formData,
+      telefono: formData.telefono || void 0,
+      referencias: formData.referencias || void 0,
+      observaciones: formData.observaciones || void 0,
+      fechaVisita: formData.fechaVisita || void 0,
+      enfermera: formData.enfermera || void 0
+    };
+    if (person) {
+      dataToSave.id = person.id;
+      dataToSave.fechaCreacion = person.fechaCreacion;
+    }
+    onSave(dataToSave);
+  };
+  return /* @__PURE__ */ jsxDEV("form", { onSubmit: handleSubmit, className: "space-y-5 sm:space-y-6", children: [
+    /* @__PURE__ */ jsxDEV(Card, { className: "overflow-hidden rounded-lg shadow-sm", children: [
+      /* @__PURE__ */ jsxDEV(CardHeader, { className: "px-4 pt-4 sm:px-6 sm:pt-6", children: /* @__PURE__ */ jsxDEV(CardTitle, { className: "text-lg leading-tight", children: "Datos Personales" }, void 0, false, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+        lineNumber: 114,
+        columnNumber: 11
+      }, this) }, void 0, false, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+        lineNumber: 113,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV(CardContent, { className: "space-y-5 px-4 pb-4 sm:px-6 sm:pb-6", children: /* @__PURE__ */ jsxDEV("div", { className: "min-w-0 space-y-2", children: [
+        /* @__PURE__ */ jsxDEV(Label, { htmlFor: "nombreCompleto", className: "block text-sm leading-5 text-foreground", children: [
+          "Nombre Completo ",
+          /* @__PURE__ */ jsxDEV("span", { className: "text-red-500", children: "*" }, void 0, false, {
+            fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+            lineNumber: 119,
+            columnNumber: 31
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+          lineNumber: 118,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV(
+          Input,
+          {
+            id: "nombreCompleto",
+            value: formData.nombreCompleto,
+            onChange: (e) => handleChange("nombreCompleto", e.target.value),
+            className: `min-h-12 border-slate-300 bg-white py-3 text-base leading-6 shadow-sm focus-visible:border-primary ${errors.nombreCompleto ? "border-red-500" : ""}`
+          },
+          void 0,
+          false,
+          {
+            fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+            lineNumber: 121,
+            columnNumber: 13
+          },
+          this
+        ),
+        errors.nombreCompleto && /* @__PURE__ */ jsxDEV("p", { className: "text-sm leading-5 text-red-500", children: errors.nombreCompleto }, void 0, false, {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+          lineNumber: 128,
+          columnNumber: 13
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+        lineNumber: 117,
+        columnNumber: 11
+      }, this) }, void 0, false, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+        lineNumber: 116,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+      lineNumber: 112,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV(Card, { className: "overflow-hidden rounded-lg shadow-sm", children: [
+      /* @__PURE__ */ jsxDEV(CardHeader, { className: "px-4 pt-4 sm:px-6 sm:pt-6", children: /* @__PURE__ */ jsxDEV(CardTitle, { className: "text-lg leading-tight", children: "Domicilio" }, void 0, false, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+        lineNumber: 136,
+        columnNumber: 11
+      }, this) }, void 0, false, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+        lineNumber: 135,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV(CardContent, { className: "space-y-5 px-4 pb-4 sm:px-6 sm:pb-6", children: [
+        /* @__PURE__ */ jsxDEV("div", { className: "grid grid-cols-1 gap-5 sm:grid-cols-2", children: [
+          /* @__PURE__ */ jsxDEV("div", { className: "min-w-0 space-y-2", children: [
+            /* @__PURE__ */ jsxDEV(Label, { htmlFor: "calle", className: "block text-sm leading-5 text-foreground", children: [
+              "Calle ",
+              /* @__PURE__ */ jsxDEV("span", { className: "text-red-500", children: "*" }, void 0, false, {
+                fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+                lineNumber: 142,
+                columnNumber: 23
+              }, this)
+            ] }, void 0, true, {
+              fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+              lineNumber: 141,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV(
+              Input,
+              {
+                id: "calle",
+                value: formData.calle,
+                onChange: (e) => handleChange("calle", e.target.value),
+                className: `min-h-12 border-slate-300 bg-white py-3 text-base leading-6 shadow-sm focus-visible:border-primary ${errors.calle ? "border-red-500" : ""}`
+              },
+              void 0,
+              false,
+              {
+                fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+                lineNumber: 144,
+                columnNumber: 15
+              },
+              this
+            ),
+            errors.calle && /* @__PURE__ */ jsxDEV("p", { className: "text-sm leading-5 text-red-500", children: errors.calle }, void 0, false, {
+              fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+              lineNumber: 151,
+              columnNumber: 15
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+            lineNumber: 140,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV("div", { children: [
+            /* @__PURE__ */ jsxDEV(Label, { htmlFor: "numeroCasa", children: "Número de Casa" }, void 0, false, {
+              fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+              lineNumber: 156,
+              columnNumber: 15
+            }, this),
+            /* @__PURE__ */ jsxDEV(
+              Input,
+              {
+                id: "numeroCasa",
+                value: formData.numeroCasa,
+                onChange: (e) => handleChange("numeroCasa", e.target.value),
+                className: "min-h-12 border-slate-300 bg-white py-3 text-base leading-6 shadow-sm focus-visible:border-primary"
+              },
+              void 0,
+              false,
+              {
+                fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+                lineNumber: 157,
+                columnNumber: 15
+              },
+              this
+            )
+          ] }, void 0, true, {
+            fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+            lineNumber: 155,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+          lineNumber: 139,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "min-w-0 space-y-2", children: [
+          /* @__PURE__ */ jsxDEV(Label, { htmlFor: "colonia", className: "block text-sm leading-5 text-foreground", children: [
+            "Colonia ",
+            /* @__PURE__ */ jsxDEV("span", { className: "text-red-500", children: "*" }, void 0, false, {
+              fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+              lineNumber: 168,
+              columnNumber: 23
+            }, this)
+          ] }, void 0, true, {
+            fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+            lineNumber: 167,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV(
+            Input,
+            {
+              id: "colonia",
+              value: formData.colonia,
+              onChange: (e) => handleChange("colonia", e.target.value),
+              className: `min-h-12 border-slate-300 bg-white py-3 text-base leading-6 shadow-sm focus-visible:border-primary ${errors.colonia ? "border-red-500" : ""}`
+            },
+            void 0,
+            false,
+            {
+              fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+              lineNumber: 170,
+              columnNumber: 13
+            },
+            this
+          ),
+          errors.colonia && /* @__PURE__ */ jsxDEV("p", { className: "text-sm leading-5 text-red-500", children: errors.colonia }, void 0, false, {
+            fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+            lineNumber: 177,
+            columnNumber: 13
+          }, this)
+        ] }, void 0, true, {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+          lineNumber: 166,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "min-w-0 space-y-2", children: [
+          /* @__PURE__ */ jsxDEV(Label, { htmlFor: "referencias", className: "block text-sm leading-5 text-foreground", children: "Referencias del Domicilio" }, void 0, false, {
+            fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+            lineNumber: 182,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV(
+            Textarea,
+            {
+              id: "referencias",
+              value: formData.referencias,
+              onChange: (e) => handleChange("referencias", e.target.value),
+              placeholder: "Ej: Casa de dos pisos, portón azul",
+              rows: 2,
+              className: "min-h-24 border-slate-300 bg-white text-base leading-6 shadow-sm focus-visible:border-primary"
+            },
+            void 0,
+            false,
+            {
+              fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+              lineNumber: 183,
+              columnNumber: 13
+            },
+            this
+          )
+        ] }, void 0, true, {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+          lineNumber: 181,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+        lineNumber: 138,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+      lineNumber: 134,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV(Card, { className: "overflow-hidden rounded-lg shadow-sm", children: [
+      /* @__PURE__ */ jsxDEV(CardHeader, { className: "px-4 pt-4 sm:px-6 sm:pt-6", children: /* @__PURE__ */ jsxDEV(CardTitle, { className: "text-lg leading-tight", children: "Contacto" }, void 0, false, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+        lineNumber: 197,
+        columnNumber: 11
+      }, this) }, void 0, false, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+        lineNumber: 196,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV(CardContent, { className: "space-y-5 px-4 pb-4 sm:px-6 sm:pb-6", children: /* @__PURE__ */ jsxDEV("div", { className: "min-w-0 space-y-2", children: [
+        /* @__PURE__ */ jsxDEV(Label, { htmlFor: "telefono", children: "Teléfono" }, void 0, false, {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+          lineNumber: 201,
+          columnNumber: 13
+        }, this),
+        /* @__PURE__ */ jsxDEV(
+          Input,
+          {
+            id: "telefono",
+            type: "tel",
+            value: formData.telefono,
+            onChange: (e) => handleChange("telefono", e.target.value),
+            className: `min-h-12 border-slate-300 bg-white py-3 text-base leading-6 shadow-sm focus-visible:border-primary ${errors.telefono ? "border-red-500" : ""}`,
+            placeholder: "Ej: 555-123-4567"
+          },
+          void 0,
+          false,
+          {
+            fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+            lineNumber: 202,
+            columnNumber: 13
+          },
+          this
+        ),
+        errors.telefono && /* @__PURE__ */ jsxDEV("p", { className: "text-sm leading-5 text-red-500", children: errors.telefono }, void 0, false, {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+          lineNumber: 211,
+          columnNumber: 13
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+        lineNumber: 200,
+        columnNumber: 11
+      }, this) }, void 0, false, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+        lineNumber: 199,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+      lineNumber: 195,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV(Card, { className: "overflow-hidden rounded-lg shadow-sm", children: [
+      /* @__PURE__ */ jsxDEV(CardHeader, { className: "px-4 pt-4 sm:px-6 sm:pt-6", children: /* @__PURE__ */ jsxDEV(CardTitle, { className: "text-lg leading-tight", children: "Estados y Validaciones" }, void 0, false, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+        lineNumber: 219,
+        columnNumber: 11
+      }, this) }, void 0, false, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+        lineNumber: 218,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV(CardContent, { className: "space-y-3 px-4 pb-4 sm:px-6 sm:pb-6", children: allEstados.map(
+        (estado) => /* @__PURE__ */ jsxDEV("div", { className: "flex min-h-10 items-start gap-3 rounded-md border bg-muted/30 p-3", children: [
+          /* @__PURE__ */ jsxDEV(
+            Checkbox,
+            {
+              id: `estado-${estado}`,
+              checked: formData.estados.includes(estado),
+              onCheckedChange: () => handleEstadoToggle(estado),
+              className: "mt-0.5 size-5"
+            },
+            void 0,
+            false,
+            {
+              fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+              lineNumber: 224,
+              columnNumber: 15
+            },
+            this
+          ),
+          /* @__PURE__ */ jsxDEV(
+            "label",
+            {
+              htmlFor: `estado-${estado}`,
+              className: "min-w-0 flex-1 cursor-pointer text-sm leading-5",
+              children: STATUS_LABELS[estado]
+            },
+            void 0,
+            false,
+            {
+              fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+              lineNumber: 230,
+              columnNumber: 15
+            },
+            this
+          )
+        ] }, estado, true, {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+          lineNumber: 223,
+          columnNumber: 11
+        }, this)
+      ) }, void 0, false, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+        lineNumber: 221,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+      lineNumber: 217,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV(Card, { className: "overflow-hidden rounded-lg shadow-sm", children: [
+      /* @__PURE__ */ jsxDEV(CardHeader, { className: "px-4 pt-4 sm:px-6 sm:pt-6", children: /* @__PURE__ */ jsxDEV(CardTitle, { children: "Información de Visita" }, void 0, false, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+        lineNumber: 243,
+        columnNumber: 11
+      }, this) }, void 0, false, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+        lineNumber: 242,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ jsxDEV(CardContent, { className: "space-y-5 px-4 pb-4 sm:px-6 sm:pb-6", children: [
+        /* @__PURE__ */ jsxDEV("div", { className: "min-w-0 space-y-2", children: [
+          /* @__PURE__ */ jsxDEV(Label, { htmlFor: "fechaVisita", className: "block text-sm leading-5 text-foreground", children: "Fecha de Visita" }, void 0, false, {
+            fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+            lineNumber: 247,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV(
+            Input,
+            {
+              id: "fechaVisita",
+              type: "date",
+              value: formData.fechaVisita,
+              onChange: (e) => handleChange("fechaVisita", e.target.value),
+              className: "min-h-12 border-slate-300 bg-white py-3 text-base leading-6 shadow-sm focus-visible:border-primary"
+            },
+            void 0,
+            false,
+            {
+              fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+              lineNumber: 248,
+              columnNumber: 13
+            },
+            this
+          )
+        ] }, void 0, true, {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+          lineNumber: 246,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "min-w-0 space-y-2", children: [
+          /* @__PURE__ */ jsxDEV(Label, { htmlFor: "enfermera", className: "block text-sm leading-5 text-foreground", children: "Enfermera o Responsable" }, void 0, false, {
+            fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+            lineNumber: 258,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV(
+            Input,
+            {
+              id: "enfermera",
+              value: formData.enfermera,
+              onChange: (e) => handleChange("enfermera", e.target.value),
+              className: "min-h-12 border-slate-300 bg-white py-3 text-base leading-6 shadow-sm focus-visible:border-primary"
+            },
+            void 0,
+            false,
+            {
+              fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+              lineNumber: 259,
+              columnNumber: 13
+            },
+            this
+          )
+        ] }, void 0, true, {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+          lineNumber: 257,
+          columnNumber: 11
+        }, this),
+        /* @__PURE__ */ jsxDEV("div", { className: "min-w-0 space-y-2", children: [
+          /* @__PURE__ */ jsxDEV(Label, { htmlFor: "observaciones", className: "block text-sm leading-5 text-foreground", children: "Observaciones" }, void 0, false, {
+            fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+            lineNumber: 268,
+            columnNumber: 13
+          }, this),
+          /* @__PURE__ */ jsxDEV(
+            Textarea,
+            {
+              id: "observaciones",
+              value: formData.observaciones,
+              onChange: (e) => handleChange("observaciones", e.target.value),
+              placeholder: "Notas adicionales",
+              rows: 3,
+              className: "min-h-28 border-slate-300 bg-white text-base leading-6 shadow-sm focus-visible:border-primary"
+            },
+            void 0,
+            false,
+            {
+              fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+              lineNumber: 269,
+              columnNumber: 13
+            },
+            this
+          )
+        ] }, void 0, true, {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+          lineNumber: 267,
+          columnNumber: 11
+        }, this)
+      ] }, void 0, true, {
+        fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+        lineNumber: 245,
+        columnNumber: 9
+      }, this)
+    ] }, void 0, true, {
+      fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+      lineNumber: 241,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ jsxDEV("div", { className: "flex flex-col gap-3 pt-2 sm:flex-row", children: [
+      /* @__PURE__ */ jsxDEV(
+        Button,
+        {
+          type: "submit",
+          className: "min-h-12 flex-1 text-base",
+          size: "lg",
+          children: person ? "Guardar Cambios" : "Crear Registro"
+        },
+        void 0,
+        false,
+        {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+          lineNumber: 282,
+          columnNumber: 9
+        },
+        this
+      ),
+      /* @__PURE__ */ jsxDEV(
+        Button,
+        {
+          type: "button",
+          variant: "outline",
+          onClick: onCancel,
+          className: "min-h-12 flex-1 text-base",
+          size: "lg",
+          children: "Cancelar"
+        },
+        void 0,
+        false,
+        {
+          fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+          lineNumber: 289,
+          columnNumber: 9
+        },
+        this
+      )
+    ] }, void 0, true, {
+      fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+      lineNumber: 281,
+      columnNumber: 7
+    }, this)
+  ] }, void 0, true, {
+    fileName: "C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx",
+    lineNumber: 111,
+    columnNumber: 5
+  }, this);
+}
+_s(PersonForm, "Gj1Omy5h4TAtQvjfIUfNsaub73Q=");
+_c = PersonForm;
+var _c;
+$RefreshReg$(_c, "PersonForm");
+if (import.meta.hot && !inWebWorker) {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+if (import.meta.hot && !inWebWorker) {
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/rafae/OneDrive/Escritorio/daTa/modulo-enfermeria/src/app/components/PersonForm.tsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+
+//# sourceMappingURL=data:application/json;base64,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YUFBYSxpQkFBaUJTLEVBQUVhLE9BQU9wQixLQUFLO0FBQUEsY0FDN0QsYUFBWTtBQUFBLGNBQ1osTUFBTTtBQUFBLGNBQ04sV0FBVTtBQUFBO0FBQUEsWUFOWjtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUEsVUFNMkc7QUFBQSxhQVI3RztBQUFBO0FBQUE7QUFBQTtBQUFBLGVBVUE7QUFBQSxXQWhDRjtBQUFBO0FBQUE7QUFBQTtBQUFBLGFBaUNBO0FBQUEsU0FyQ0Y7QUFBQTtBQUFBO0FBQUE7QUFBQSxXQXNDQTtBQUFBLElBRUEsdUJBQUMsU0FBSSxXQUFVLHdDQUNiO0FBQUE7QUFBQSxRQUFDO0FBQUE7QUFBQSxVQUNDLE1BQUs7QUFBQSxVQUNMLFdBQVU7QUFBQSxVQUNWLE1BQUs7QUFBQSxVQUVKcEIsbUJBQVMsb0JBQW9CO0FBQUE7QUFBQSxRQUxoQztBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUEsTUFNQTtBQUFBLE1BQ0E7QUFBQSxRQUFDO0FBQUE7QUFBQSxVQUNDLE1BQUs7QUFBQSxVQUNMLFNBQVE7QUFBQSxVQUNSLFNBQVNFO0FBQUFBLFVBQ1QsV0FBVTtBQUFBLFVBQ1YsTUFBSztBQUFBLFVBQUk7QUFBQTtBQUFBLFFBTFg7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBLE1BUUE7QUFBQSxTQWhCRjtBQUFBO0FBQUE7QUFBQTtBQUFBLFdBaUJBO0FBQUEsT0EzTEY7QUFBQTtBQUFBO0FBQUE7QUFBQSxTQTRMQTtBQUVKO0FBQUNDLEdBalFlSixZQUFVO0FBQUEsS0FBVkE7QUFBVSxJQUFBMkM7QUFBQSxhQUFBQSxJQUFBIiwibmFtZXMiOlsidXNlU3RhdGUiLCJTVEFUVVNfTEFCRUxTIiwidmFsaWRhdGVQZXJzb25Gb3JtIiwiQnV0dG9uIiwiSW5wdXQiLCJMYWJlbCIsIlRleHRhcmVhIiwiQ2hlY2tib3giLCJDYXJkIiwiQ2FyZENvbnRlbnQiLCJDYXJkSGVhZGVyIiwiQ2FyZFRpdGxlIiwiYWxsRXN0YWRvcyIsIlBlcnNvbkZvcm0iLCJwZXJzb24iLCJvblNhdmUiLCJvbkNhbmNlbCIsIl9zIiwiZm9ybURhdGEiLCJzZXRGb3JtRGF0YSIsIm5vbWJyZUNvbXBsZXRvIiwiY2FsbGUiLCJudW1lcm9DYXNhIiwiY29sb25pYSIsInRlbGVmb25vIiwicmVmZXJlbmNpYXMiLCJvYnNlcnZhY2lvbmVzIiwiZXN0YWRvcyIsImZlY2hhVmlzaXRhIiwiZW5mZXJtZXJhIiwiZXJyb3JzIiwic2V0RXJyb3JzIiwiaGFuZGxlQ2hhbmdlIiwiZmllbGQiLCJ2YWx1ZSIsInByZXYiLCJuZXdFcnJvcnMiLCJoYW5kbGVFc3RhZG9Ub2dnbGUiLCJlc3RhZG8iLCJpbmNsdWRlcyIsImZpbHRlciIsImUiLCJoYW5kbGVTdWJtaXQiLCJwcmV2ZW50RGVmYXVsdCIsInZhbGlkYXRpb25FcnJvcnMiLCJsZW5ndGgiLCJlcnJvck1hcCIsImZvckVhY2giLCJlcnJvciIsIm1lc3NhZ2UiLCJkYXRhVG9TYXZlIiwidW5kZWZpbmVkIiwiaWQiLCJmZWNoYUNyZWFjaW9uIiwidGFyZ2V0IiwibWFwIiwiX2MiXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZXMiOlsiUGVyc29uRm9ybS50c3giXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgdXNlU3RhdGUsIHVzZUVmZmVjdCB9IGZyb20gJ3JlYWN0JztcbmltcG9ydCB7IFBlcnNvbiwgUGVyc29uU3RhdHVzLCBTVEFUVVNfTEFCRUxTIH0gZnJvbSAnLi4vbW9kZWxzL3BlcnNvbi5tb2RlbCc7XG5pbXBvcnQgeyB2YWxpZGF0ZVBlcnNvbkZvcm0gfSBmcm9tICcuLi91dGlscy92YWxpZGF0b3JzJztcbmltcG9ydCB7IEJ1dHRvbiB9IGZyb20gJy4vdWkvYnV0dG9uJztcbmltcG9ydCB7IElucHV0IH0gZnJvbSAnLi91aS9pbnB1dCc7XG5pbXBvcnQgeyBMYWJlbCB9IGZyb20gJy4vdWkvbGFiZWwnO1xuaW1wb3J0IHsgVGV4dGFyZWEgfSBmcm9tICcuL3VpL3RleHRhcmVhJztcbmltcG9ydCB7IENoZWNrYm94IH0gZnJvbSAnLi91aS9jaGVja2JveCc7XG5pbXBvcnQgeyBDYXJkLCBDYXJkQ29udGVudCwgQ2FyZEhlYWRlciwgQ2FyZFRpdGxlIH0gZnJvbSAnLi91aS9jYXJkJztcblxuaW50ZXJmYWNlIFBlcnNvbkZvcm1Qcm9wcyB7XG4gIHBlcnNvbj86IFBlcnNvbjtcbiAgb25TYXZlOiAoZGF0YTogUGFydGlhbDxQZXJzb24+KSA9PiB2b2lkO1xuICBvbkNhbmNlbDogKCkgPT4gdm9pZDtcbn1cblxuY29uc3QgYWxsRXN0YWRvczogUGVyc29uU3RhdHVzW10gPSBbXG4gICdmdWVyYV9kZWxfcGFpcycsXG4gICdzaW5fdmlzaXRhJyxcbiAgJ25vX2VuY29udHJhZG8nLFxuICAnbm9fcXVpc29fcHJvZ3JhbWEnLFxuICAnY2FtYmlvX2RvbWljaWxpbydcbl07XG5cbmV4cG9ydCBmdW5jdGlvbiBQZXJzb25Gb3JtKHsgcGVyc29uLCBvblNhdmUsIG9uQ2FuY2VsIH06IFBlcnNvbkZvcm1Qcm9wcykge1xuICBjb25zdCBbZm9ybURhdGEsIHNldEZvcm1EYXRhXSA9IHVzZVN0YXRlKHtcbiAgICBub21icmVDb21wbGV0bzogcGVyc29uPy5ub21icmVDb21wbGV0byB8fCAnJyxcbiAgICBjYWxsZTogcGVyc29uPy5jYWxsZSB8fCAnJyxcbiAgICBudW1lcm9DYXNhOiBwZXJzb24/Lm51bWVyb0Nhc2EgfHwgJycsXG4gICAgY29sb25pYTogcGVyc29uPy5jb2xvbmlhIHx8ICcnLFxuICAgIHRlbGVmb25vOiBwZXJzb24/LnRlbGVmb25vIHx8ICcnLFxuICAgIHJlZmVyZW5jaWFzOiBwZXJzb24/LnJlZmVyZW5jaWFzIHx8ICcnLFxuICAgIG9ic2VydmFjaW9uZXM6IHBlcnNvbj8ub2JzZXJ2YWNpb25lcyB8fCAnJyxcbiAgICBlc3RhZG9zOiBwZXJzb24/LmVzdGFkb3MgfHwgW10gYXMgUGVyc29uU3RhdHVzW10sXG4gICAgZmVjaGFWaXNpdGE6IHBlcnNvbj8uZmVjaGFWaXNpdGEgfHwgJycsXG4gICAgZW5mZXJtZXJhOiBwZXJzb24/LmVuZmVybWVyYSB8fCAnJ1xuICB9KTtcblxuICBjb25zdCBbZXJyb3JzLCBzZXRFcnJvcnNdID0gdXNlU3RhdGU8UmVjb3JkPHN0cmluZywgc3RyaW5nPj4oe30pO1xuXG4gIGNvbnN0IGhhbmRsZUNoYW5nZSA9IChmaWVsZDogc3RyaW5nLCB2YWx1ZTogc3RyaW5nKSA9PiB7XG4gICAgc2V0Rm9ybURhdGEocHJldiA9PiAoeyAuLi5wcmV2LCBbZmllbGRdOiB2YWx1ZSB9KSk7XG4gICAgaWYgKGVycm9yc1tmaWVsZF0pIHtcbiAgICAgIHNldEVycm9ycyhwcmV2ID0+IHtcbiAgICAgICAgY29uc3QgbmV3RXJyb3JzID0geyAuLi5wcmV2IH07XG4gICAgICAgIGRlbGV0ZSBuZXdFcnJvcnNbZmllbGRdO1xuICAgICAgICByZXR1cm4gbmV3RXJyb3JzO1xuICAgICAgfSk7XG4gICAgfVxuICB9O1xuXG4gIGNvbnN0IGhhbmRsZUVzdGFkb1RvZ2dsZSA9IChlc3RhZG86IFBlcnNvblN0YXR1cykgPT4ge1xuICAgIHNldEZvcm1EYXRhKHByZXYgPT4gKHtcbiAgICAgIC4uLnByZXYsXG4gICAgICBlc3RhZG9zOiBwcmV2LmVzdGFkb3MuaW5jbHVkZXMoZXN0YWRvKVxuICAgICAgICA/IHByZXYuZXN0YWRvcy5maWx0ZXIoZSA9PiBlICE9PSBlc3RhZG8pXG4gICAgICAgIDogWy4uLnByZXYuZXN0YWRvcywgZXN0YWRvXVxuICAgIH0pKTtcbiAgfTtcblxuICBjb25zdCBoYW5kbGVTdWJtaXQgPSAoZTogUmVhY3QuRm9ybUV2ZW50KSA9PiB7XG4gICAgZS5wcmV2ZW50RGVmYXVsdCgpO1xuXG4gICAgY29uc3QgdmFsaWRhdGlvbkVycm9ycyA9IHZhbGlkYXRlUGVyc29uRm9ybShmb3JtRGF0YSk7XG4gICAgaWYgKHZhbGlkYXRpb25FcnJvcnMubGVuZ3RoID4gMCkge1xuICAgICAgY29uc3QgZXJyb3JNYXA6IFJlY29yZDxzdHJpbmcsIHN0cmluZz4gPSB7fTtcbiAgICAgIHZhbGlkYXRpb25FcnJvcnMuZm9yRWFjaChlcnJvciA9PiB7XG4gICAgICAgIGVycm9yTWFwW2Vycm9yLmZpZWxkXSA9IGVycm9yLm1lc3NhZ2U7XG4gICAgICB9KTtcbiAgICAgIHNldEVycm9ycyhlcnJvck1hcCk7XG4gICAgICByZXR1cm47XG4gICAgfVxuXG4gICAgY29uc3QgZGF0YVRvU2F2ZTogUGFydGlhbDxQZXJzb24+ID0ge1xuICAgICAgLi4uZm9ybURhdGEsXG4gICAgICB0ZWxlZm9ubzogZm9ybURhdGEudGVsZWZvbm8gfHwgdW5kZWZpbmVkLFxuICAgICAgcmVmZXJlbmNpYXM6IGZvcm1EYXRhLnJlZmVyZW5jaWFzIHx8IHVuZGVmaW5lZCxcbiAgICAgIG9ic2VydmFjaW9uZXM6IGZvcm1EYXRhLm9ic2VydmFjaW9uZXMgfHwgdW5kZWZpbmVkLFxuICAgICAgZmVjaGFWaXNpdGE6IGZvcm1EYXRhLmZlY2hhVmlzaXRhIHx8IHVuZGVmaW5lZCxcbiAgICAgIGVuZmVybWVyYTogZm9ybURhdGEuZW5mZXJtZXJhIHx8IHVuZGVmaW5lZFxuICAgIH07XG5cbiAgICBpZiAocGVyc29uKSB7XG4gICAgICBkYXRhVG9TYXZlLmlkID0gcGVyc29uLmlkO1xuICAgICAgZGF0YVRvU2F2ZS5mZWNoYUNyZWFjaW9uID0gcGVyc29uLmZlY2hhQ3JlYWNpb247XG4gICAgfVxuXG4gICAgb25TYXZlKGRhdGFUb1NhdmUpO1xuICB9O1xuXG4gIHJldHVybiAoXG4gICAgPGZvcm0gb25TdWJtaXQ9e2hhbmRsZVN1Ym1pdH0gY2xhc3NOYW1lPVwic3BhY2UteS01IHNtOnNwYWNlLXktNlwiPlxuICAgICAgPENhcmQgY2xhc3NOYW1lPVwib3ZlcmZsb3ctaGlkZGVuIHJvdW5kZWQtbGcgc2hhZG93LXNtXCI+XG4gICAgICAgIDxDYXJkSGVhZGVyIGNsYXNzTmFtZT1cInB4LTQgcHQtNCBzbTpweC02IHNtOnB0LTZcIj5cbiAgICAgICAgICA8Q2FyZFRpdGxlIGNsYXNzTmFtZT1cInRleHQtbGcgbGVhZGluZy10aWdodFwiPkRhdG9zIFBlcnNvbmFsZXM8L0NhcmRUaXRsZT5cbiAgICAgICAgPC9DYXJkSGVhZGVyPlxuICAgICAgICA8Q2FyZENvbnRlbnQgY2xhc3NOYW1lPVwic3BhY2UteS01IHB4LTQgcGItNCBzbTpweC02IHNtOnBiLTZcIj5cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cIm1pbi13LTAgc3BhY2UteS0yXCI+XG4gICAgICAgICAgICA8TGFiZWwgaHRtbEZvcj1cIm5vbWJyZUNvbXBsZXRvXCIgY2xhc3NOYW1lPVwiYmxvY2sgdGV4dC1zbSBsZWFkaW5nLTUgdGV4dC1mb3JlZ3JvdW5kXCI+XG4gICAgICAgICAgICAgIE5vbWJyZSBDb21wbGV0byA8c3BhbiBjbGFzc05hbWU9XCJ0ZXh0LXJlZC01MDBcIj4qPC9zcGFuPlxuICAgICAgICAgICAgPC9MYWJlbD5cbiAgICAgICAgICAgIDxJbnB1dFxuICAgICAgICAgICAgICBpZD1cIm5vbWJyZUNvbXBsZXRvXCJcbiAgICAgICAgICAgICAgdmFsdWU9e2Zvcm1EYXRhLm5vbWJyZUNvbXBsZXRvfVxuICAgICAgICAgICAgICBvbkNoYW5nZT17KGUpID0+IGhhbmRsZUNoYW5nZSgnbm9tYnJlQ29tcGxldG8nLCBlLnRhcmdldC52YWx1ZSl9XG4gICAgICAgICAgICAgIGNsYXNzTmFtZT17YG1pbi1oLTEyIGJvcmRlci1zbGF0ZS0zMDAgYmctd2hpdGUgcHktMyB0ZXh0LWJhc2UgbGVhZGluZy02IHNoYWRvdy1zbSBmb2N1cy12aXNpYmxlOmJvcmRlci1wcmltYXJ5ICR7ZXJyb3JzLm5vbWJyZUNvbXBsZXRvID8gJ2JvcmRlci1yZWQtNTAwJyA6ICcnfWB9XG4gICAgICAgICAgICAvPlxuICAgICAgICAgICAge2Vycm9ycy5ub21icmVDb21wbGV0byAmJiAoXG4gICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cInRleHQtc20gbGVhZGluZy01IHRleHQtcmVkLTUwMFwiPntlcnJvcnMubm9tYnJlQ29tcGxldG99PC9wPlxuICAgICAgICAgICAgKX1cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgPC9DYXJkQ29udGVudD5cbiAgICAgIDwvQ2FyZD5cblxuICAgICAgPENhcmQgY2xhc3NOYW1lPVwib3ZlcmZsb3ctaGlkZGVuIHJvdW5kZWQtbGcgc2hhZG93LXNtXCI+XG4gICAgICAgIDxDYXJkSGVhZGVyIGNsYXNzTmFtZT1cInB4LTQgcHQtNCBzbTpweC02IHNtOnB0LTZcIj5cbiAgICAgICAgICA8Q2FyZFRpdGxlIGNsYXNzTmFtZT1cInRleHQtbGcgbGVhZGluZy10aWdodFwiPkRvbWljaWxpbzwvQ2FyZFRpdGxlPlxuICAgICAgICA8L0NhcmRIZWFkZXI+XG4gICAgICAgIDxDYXJkQ29udGVudCBjbGFzc05hbWU9XCJzcGFjZS15LTUgcHgtNCBwYi00IHNtOnB4LTYgc206cGItNlwiPlxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiZ3JpZCBncmlkLWNvbHMtMSBnYXAtNSBzbTpncmlkLWNvbHMtMlwiPlxuICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJtaW4tdy0wIHNwYWNlLXktMlwiPlxuICAgICAgICAgICAgICA8TGFiZWwgaHRtbEZvcj1cImNhbGxlXCIgY2xhc3NOYW1lPVwiYmxvY2sgdGV4dC1zbSBsZWFkaW5nLTUgdGV4dC1mb3JlZ3JvdW5kXCI+XG4gICAgICAgICAgICAgICAgQ2FsbGUgPHNwYW4gY2xhc3NOYW1lPVwidGV4dC1yZWQtNTAwXCI+Kjwvc3Bhbj5cbiAgICAgICAgICAgICAgPC9MYWJlbD5cbiAgICAgICAgICAgICAgPElucHV0XG4gICAgICAgICAgICAgICAgaWQ9XCJjYWxsZVwiXG4gICAgICAgICAgICAgICAgdmFsdWU9e2Zvcm1EYXRhLmNhbGxlfVxuICAgICAgICAgICAgICAgIG9uQ2hhbmdlPXsoZSkgPT4gaGFuZGxlQ2hhbmdlKCdjYWxsZScsIGUudGFyZ2V0LnZhbHVlKX1cbiAgICAgICAgICAgICAgICBjbGFzc05hbWU9e2BtaW4taC0xMiBib3JkZXItc2xhdGUtMzAwIGJnLXdoaXRlIHB5LTMgdGV4dC1iYXNlIGxlYWRpbmctNiBzaGFkb3ctc20gZm9jdXMtdmlzaWJsZTpib3JkZXItcHJpbWFyeSAke2Vycm9ycy5jYWxsZSA/ICdib3JkZXItcmVkLTUwMCcgOiAnJ31gfVxuICAgICAgICAgICAgICAvPlxuICAgICAgICAgICAgICB7ZXJyb3JzLmNhbGxlICYmIChcbiAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJ0ZXh0LXNtIGxlYWRpbmctNSB0ZXh0LXJlZC01MDBcIj57ZXJyb3JzLmNhbGxlfTwvcD5cbiAgICAgICAgICAgICAgKX1cbiAgICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgICA8ZGl2PlxuICAgICAgICAgICAgICA8TGFiZWwgaHRtbEZvcj1cIm51bWVyb0Nhc2FcIj5Ow7ptZXJvIGRlIENhc2E8L0xhYmVsPlxuICAgICAgICAgICAgICA8SW5wdXRcbiAgICAgICAgICAgICAgICBpZD1cIm51bWVyb0Nhc2FcIlxuICAgICAgICAgICAgICAgIHZhbHVlPXtmb3JtRGF0YS5udW1lcm9DYXNhfVxuICAgICAgICAgICAgICAgIG9uQ2hhbmdlPXsoZSkgPT4gaGFuZGxlQ2hhbmdlKCdudW1lcm9DYXNhJywgZS50YXJnZXQudmFsdWUpfVxuICAgICAgICAgICAgICAgIGNsYXNzTmFtZT1cIm1pbi1oLTEyIGJvcmRlci1zbGF0ZS0zMDAgYmctd2hpdGUgcHktMyB0ZXh0LWJhc2UgbGVhZGluZy02IHNoYWRvdy1zbSBmb2N1cy12aXNpYmxlOmJvcmRlci1wcmltYXJ5XCJcbiAgICAgICAgICAgICAgLz5cbiAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJtaW4tdy0wIHNwYWNlLXktMlwiPlxuICAgICAgICAgICAgPExhYmVsIGh0bWxGb3I9XCJjb2xvbmlhXCIgY2xhc3NOYW1lPVwiYmxvY2sgdGV4dC1zbSBsZWFkaW5nLTUgdGV4dC1mb3JlZ3JvdW5kXCI+XG4gICAgICAgICAgICAgIENvbG9uaWEgPHNwYW4gY2xhc3NOYW1lPVwidGV4dC1yZWQtNTAwXCI+Kjwvc3Bhbj5cbiAgICAgICAgICAgIDwvTGFiZWw+XG4gICAgICAgICAgICA8SW5wdXRcbiAgICAgICAgICAgICAgaWQ9XCJjb2xvbmlhXCJcbiAgICAgICAgICAgICAgdmFsdWU9e2Zvcm1EYXRhLmNvbG9uaWF9XG4gICAgICAgICAgICAgIG9uQ2hhbmdlPXsoZSkgPT4gaGFuZGxlQ2hhbmdlKCdjb2xvbmlhJywgZS50YXJnZXQudmFsdWUpfVxuICAgICAgICAgICAgICBjbGFzc05hbWU9e2BtaW4taC0xMiBib3JkZXItc2xhdGUtMzAwIGJnLXdoaXRlIHB5LTMgdGV4dC1iYXNlIGxlYWRpbmctNiBzaGFkb3ctc20gZm9jdXMtdmlzaWJsZTpib3JkZXItcHJpbWFyeSAke2Vycm9ycy5jb2xvbmlhID8gJ2JvcmRlci1yZWQtNTAwJyA6ICcnfWB9XG4gICAgICAgICAgICAvPlxuICAgICAgICAgICAge2Vycm9ycy5jb2xvbmlhICYmIChcbiAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPVwidGV4dC1zbSBsZWFkaW5nLTUgdGV4dC1yZWQtNTAwXCI+e2Vycm9ycy5jb2xvbmlhfTwvcD5cbiAgICAgICAgICAgICl9XG4gICAgICAgICAgPC9kaXY+XG5cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cIm1pbi13LTAgc3BhY2UteS0yXCI+XG4gICAgICAgICAgICA8TGFiZWwgaHRtbEZvcj1cInJlZmVyZW5jaWFzXCIgY2xhc3NOYW1lPVwiYmxvY2sgdGV4dC1zbSBsZWFkaW5nLTUgdGV4dC1mb3JlZ3JvdW5kXCI+UmVmZXJlbmNpYXMgZGVsIERvbWljaWxpbzwvTGFiZWw+XG4gICAgICAgICAgICA8VGV4dGFyZWFcbiAgICAgICAgICAgICAgaWQ9XCJyZWZlcmVuY2lhc1wiXG4gICAgICAgICAgICAgIHZhbHVlPXtmb3JtRGF0YS5yZWZlcmVuY2lhc31cbiAgICAgICAgICAgICAgb25DaGFuZ2U9eyhlKSA9PiBoYW5kbGVDaGFuZ2UoJ3JlZmVyZW5jaWFzJywgZS50YXJnZXQudmFsdWUpfVxuICAgICAgICAgICAgICBwbGFjZWhvbGRlcj1cIkVqOiBDYXNhIGRlIGRvcyBwaXNvcywgcG9ydMOzbiBhenVsXCJcbiAgICAgICAgICAgICAgcm93cz17Mn1cbiAgICAgICAgICAgICAgY2xhc3NOYW1lPVwibWluLWgtMjQgYm9yZGVyLXNsYXRlLTMwMCBiZy13aGl0ZSB0ZXh0LWJhc2UgbGVhZGluZy02IHNoYWRvdy1zbSBmb2N1cy12aXNpYmxlOmJvcmRlci1wcmltYXJ5XCJcbiAgICAgICAgICAgIC8+XG4gICAgICAgICAgPC9kaXY+XG4gICAgICAgIDwvQ2FyZENvbnRlbnQ+XG4gICAgICA8L0NhcmQ+XG5cbiAgICAgIDxDYXJkIGNsYXNzTmFtZT1cIm92ZXJmbG93LWhpZGRlbiByb3VuZGVkLWxnIHNoYWRvdy1zbVwiPlxuICAgICAgICA8Q2FyZEhlYWRlciBjbGFzc05hbWU9XCJweC00IHB0LTQgc206cHgtNiBzbTpwdC02XCI+XG4gICAgICAgICAgPENhcmRUaXRsZSBjbGFzc05hbWU9XCJ0ZXh0LWxnIGxlYWRpbmctdGlnaHRcIj5Db250YWN0bzwvQ2FyZFRpdGxlPlxuICAgICAgICA8L0NhcmRIZWFkZXI+XG4gICAgICAgIDxDYXJkQ29udGVudCBjbGFzc05hbWU9XCJzcGFjZS15LTUgcHgtNCBwYi00IHNtOnB4LTYgc206cGItNlwiPlxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwibWluLXctMCBzcGFjZS15LTJcIj5cbiAgICAgICAgICAgIDxMYWJlbCBodG1sRm9yPVwidGVsZWZvbm9cIj5UZWzDqWZvbm88L0xhYmVsPlxuICAgICAgICAgICAgPElucHV0XG4gICAgICAgICAgICAgIGlkPVwidGVsZWZvbm9cIlxuICAgICAgICAgICAgICB0eXBlPVwidGVsXCJcbiAgICAgICAgICAgICAgdmFsdWU9e2Zvcm1EYXRhLnRlbGVmb25vfVxuICAgICAgICAgICAgICBvbkNoYW5nZT17KGUpID0+IGhhbmRsZUNoYW5nZSgndGVsZWZvbm8nLCBlLnRhcmdldC52YWx1ZSl9XG4gICAgICAgICAgICAgIGNsYXNzTmFtZT17YG1pbi1oLTEyIGJvcmRlci1zbGF0ZS0zMDAgYmctd2hpdGUgcHktMyB0ZXh0LWJhc2UgbGVhZGluZy02IHNoYWRvdy1zbSBmb2N1cy12aXNpYmxlOmJvcmRlci1wcmltYXJ5ICR7ZXJyb3JzLnRlbGVmb25vID8gJ2JvcmRlci1yZWQtNTAwJyA6ICcnfWB9XG4gICAgICAgICAgICAgIHBsYWNlaG9sZGVyPVwiRWo6IDU1NS0xMjMtNDU2N1wiXG4gICAgICAgICAgICAvPlxuICAgICAgICAgICAge2Vycm9ycy50ZWxlZm9ubyAmJiAoXG4gICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cInRleHQtc20gbGVhZGluZy01IHRleHQtcmVkLTUwMFwiPntlcnJvcnMudGVsZWZvbm99PC9wPlxuICAgICAgICAgICAgKX1cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgPC9DYXJkQ29udGVudD5cbiAgICAgIDwvQ2FyZD5cblxuICAgICAgPENhcmQgY2xhc3NOYW1lPVwib3ZlcmZsb3ctaGlkZGVuIHJvdW5kZWQtbGcgc2hhZG93LXNtXCI+XG4gICAgICAgIDxDYXJkSGVhZGVyIGNsYXNzTmFtZT1cInB4LTQgcHQtNCBzbTpweC02IHNtOnB0LTZcIj5cbiAgICAgICAgICA8Q2FyZFRpdGxlIGNsYXNzTmFtZT1cInRleHQtbGcgbGVhZGluZy10aWdodFwiPkVzdGFkb3MgeSBWYWxpZGFjaW9uZXM8L0NhcmRUaXRsZT5cbiAgICAgICAgPC9DYXJkSGVhZGVyPlxuICAgICAgICA8Q2FyZENvbnRlbnQgY2xhc3NOYW1lPVwic3BhY2UteS0zIHB4LTQgcGItNCBzbTpweC02IHNtOnBiLTZcIj5cbiAgICAgICAgICB7YWxsRXN0YWRvcy5tYXAoKGVzdGFkbykgPT4gKFxuICAgICAgICAgICAgPGRpdiBrZXk9e2VzdGFkb30gY2xhc3NOYW1lPVwiZmxleCBtaW4taC0xMCBpdGVtcy1zdGFydCBnYXAtMyByb3VuZGVkLW1kIGJvcmRlciBiZy1tdXRlZC8zMCBwLTNcIj5cbiAgICAgICAgICAgICAgPENoZWNrYm94XG4gICAgICAgICAgICAgICAgaWQ9e2Blc3RhZG8tJHtlc3RhZG99YH1cbiAgICAgICAgICAgICAgICBjaGVja2VkPXtmb3JtRGF0YS5lc3RhZG9zLmluY2x1ZGVzKGVzdGFkbyl9XG4gICAgICAgICAgICAgICAgb25DaGVja2VkQ2hhbmdlPXsoKSA9PiBoYW5kbGVFc3RhZG9Ub2dnbGUoZXN0YWRvKX1cbiAgICAgICAgICAgICAgICBjbGFzc05hbWU9XCJtdC0wLjUgc2l6ZS01XCJcbiAgICAgICAgICAgICAgLz5cbiAgICAgICAgICAgICAgPGxhYmVsXG4gICAgICAgICAgICAgICAgaHRtbEZvcj17YGVzdGFkby0ke2VzdGFkb31gfVxuICAgICAgICAgICAgICAgIGNsYXNzTmFtZT1cIm1pbi13LTAgZmxleC0xIGN1cnNvci1wb2ludGVyIHRleHQtc20gbGVhZGluZy01XCJcbiAgICAgICAgICAgICAgPlxuICAgICAgICAgICAgICAgIHtTVEFUVVNfTEFCRUxTW2VzdGFkb119XG4gICAgICAgICAgICAgIDwvbGFiZWw+XG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICApKX1cbiAgICAgICAgPC9DYXJkQ29udGVudD5cbiAgICAgIDwvQ2FyZD5cblxuICAgICAgPENhcmQgY2xhc3NOYW1lPVwib3ZlcmZsb3ctaGlkZGVuIHJvdW5kZWQtbGcgc2hhZG93LXNtXCI+XG4gICAgICAgIDxDYXJkSGVhZGVyIGNsYXNzTmFtZT1cInB4LTQgcHQtNCBzbTpweC02IHNtOnB0LTZcIj5cbiAgICAgICAgICA8Q2FyZFRpdGxlPkluZm9ybWFjacOzbiBkZSBWaXNpdGE8L0NhcmRUaXRsZT5cbiAgICAgICAgPC9DYXJkSGVhZGVyPlxuICAgICAgICA8Q2FyZENvbnRlbnQgY2xhc3NOYW1lPVwic3BhY2UteS01IHB4LTQgcGItNCBzbTpweC02IHNtOnBiLTZcIj5cbiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cIm1pbi13LTAgc3BhY2UteS0yXCI+XG4gICAgICAgICAgICA8TGFiZWwgaHRtbEZvcj1cImZlY2hhVmlzaXRhXCIgY2xhc3NOYW1lPVwiYmxvY2sgdGV4dC1zbSBsZWFkaW5nLTUgdGV4dC1mb3JlZ3JvdW5kXCI+RmVjaGEgZGUgVmlzaXRhPC9MYWJlbD5cbiAgICAgICAgICAgIDxJbnB1dFxuICAgICAgICAgICAgICBpZD1cImZlY2hhVmlzaXRhXCJcbiAgICAgICAgICAgICAgdHlwZT1cImRhdGVcIlxuICAgICAgICAgICAgICB2YWx1ZT17Zm9ybURhdGEuZmVjaGFWaXNpdGF9XG4gICAgICAgICAgICAgIG9uQ2hhbmdlPXsoZSkgPT4gaGFuZGxlQ2hhbmdlKCdmZWNoYVZpc2l0YScsIGUudGFyZ2V0LnZhbHVlKX1cbiAgICAgICAgICAgICAgY2xhc3NOYW1lPVwibWluLWgtMTIgYm9yZGVyLXNsYXRlLTMwMCBiZy13aGl0ZSBweS0zIHRleHQtYmFzZSBsZWFkaW5nLTYgc2hhZG93LXNtIGZvY3VzLXZpc2libGU6Ym9yZGVyLXByaW1hcnlcIlxuICAgICAgICAgICAgLz5cbiAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwibWluLXctMCBzcGFjZS15LTJcIj5cbiAgICAgICAgICAgIDxMYWJlbCBodG1sRm9yPVwiZW5mZXJtZXJhXCIgY2xhc3NOYW1lPVwiYmxvY2sgdGV4dC1zbSBsZWFkaW5nLTUgdGV4dC1mb3JlZ3JvdW5kXCI+RW5mZXJtZXJhIG8gUmVzcG9uc2FibGU8L0xhYmVsPlxuICAgICAgICAgICAgPElucHV0XG4gICAgICAgICAgICAgIGlkPVwiZW5mZXJtZXJhXCJcbiAgICAgICAgICAgICAgdmFsdWU9e2Zvcm1EYXRhLmVuZmVybWVyYX1cbiAgICAgICAgICAgICAgb25DaGFuZ2U9eyhlKSA9PiBoYW5kbGVDaGFuZ2UoJ2VuZmVybWVyYScsIGUudGFyZ2V0LnZhbHVlKX1cbiAgICAgICAgICAgICAgY2xhc3NOYW1lPVwibWluLWgtMTIgYm9yZGVyLXNsYXRlLTMwMCBiZy13aGl0ZSBweS0zIHRleHQtYmFzZSBsZWFkaW5nLTYgc2hhZG93LXNtIGZvY3VzLXZpc2libGU6Ym9yZGVyLXByaW1hcnlcIlxuICAgICAgICAgICAgLz5cbiAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwibWluLXctMCBzcGFjZS15LTJcIj5cbiAgICAgICAgICAgIDxMYWJlbCBodG1sRm9yPVwib2JzZXJ2YWNpb25lc1wiIGNsYXNzTmFtZT1cImJsb2NrIHRleHQtc20gbGVhZGluZy01IHRleHQtZm9yZWdyb3VuZFwiPk9ic2VydmFjaW9uZXM8L0xhYmVsPlxuICAgICAgICAgICAgPFRleHRhcmVhXG4gICAgICAgICAgICAgIGlkPVwib2JzZXJ2YWNpb25lc1wiXG4gICAgICAgICAgICAgIHZhbHVlPXtmb3JtRGF0YS5vYnNlcnZhY2lvbmVzfVxuICAgICAgICAgICAgICBvbkNoYW5nZT17KGUpID0+IGhhbmRsZUNoYW5nZSgnb2JzZXJ2YWNpb25lcycsIGUudGFyZ2V0LnZhbHVlKX1cbiAgICAgICAgICAgICAgcGxhY2Vob2xkZXI9XCJOb3RhcyBhZGljaW9uYWxlc1wiXG4gICAgICAgICAgICAgIHJvd3M9ezN9XG4gICAgICAgICAgICAgIGNsYXNzTmFtZT1cIm1pbi1oLTI4IGJvcmRlci1zbGF0ZS0zMDAgYmctd2hpdGUgdGV4dC1iYXNlIGxlYWRpbmctNiBzaGFkb3ctc20gZm9jdXMtdmlzaWJsZTpib3JkZXItcHJpbWFyeVwiXG4gICAgICAgICAgICAvPlxuICAgICAgICAgIDwvZGl2PlxuICAgICAgICA8L0NhcmRDb250ZW50PlxuICAgICAgPC9DYXJkPlxuXG4gICAgICA8ZGl2IGNsYXNzTmFtZT1cImZsZXggZmxleC1jb2wgZ2FwLTMgcHQtMiBzbTpmbGV4LXJvd1wiPlxuICAgICAgICA8QnV0dG9uXG4gICAgICAgICAgdHlwZT1cInN1Ym1pdFwiXG4gICAgICAgICAgY2xhc3NOYW1lPVwibWluLWgtMTIgZmxleC0xIHRleHQtYmFzZVwiXG4gICAgICAgICAgc2l6ZT1cImxnXCJcbiAgICAgICAgPlxuICAgICAgICAgIHtwZXJzb24gPyAnR3VhcmRhciBDYW1iaW9zJyA6ICdDcmVhciBSZWdpc3Rybyd9XG4gICAgICAgIDwvQnV0dG9uPlxuICAgICAgICA8QnV0dG9uXG4gICAgICAgICAgdHlwZT1cImJ1dHRvblwiXG4gICAgICAgICAgdmFyaWFudD1cIm91dGxpbmVcIlxuICAgICAgICAgIG9uQ2xpY2s9e29uQ2FuY2VsfVxuICAgICAgICAgIGNsYXNzTmFtZT1cIm1pbi1oLTEyIGZsZXgtMSB0ZXh0LWJhc2VcIlxuICAgICAgICAgIHNpemU9XCJsZ1wiXG4gICAgICAgID5cbiAgICAgICAgICBDYW5jZWxhclxuICAgICAgICA8L0J1dHRvbj5cbiAgICAgIDwvZGl2PlxuICAgIDwvZm9ybT5cbiAgKTtcbn1cbiJdLCJmaWxlIjoiQzovVXNlcnMvcmFmYWUvT25lRHJpdmUvRXNjcml0b3Jpby9kYVRhL21vZHVsby1lbmZlcm1lcmlhL3NyYy9hcHAvY29tcG9uZW50cy9QZXJzb25Gb3JtLnRzeCJ9
