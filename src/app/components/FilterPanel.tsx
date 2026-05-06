@@ -5,12 +5,15 @@ import { Label } from './ui/label';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { Card } from './ui/card';
 import { Filter, X } from 'lucide-react';
+import { CarnetFilter } from '../utils/filters';
 
 interface FilterPanelProps {
   selectedEstados: PersonStatus[];
   estadosMode: 'any' | 'all';
+  carnetFilter: CarnetFilter;
   onEstadosChange: (estados: PersonStatus[]) => void;
   onEstadosModeChange: (mode: 'any' | 'all') => void;
+  onCarnetFilterChange: (filter: CarnetFilter) => void;
   onClearFilters: () => void;
 }
 
@@ -27,8 +30,10 @@ const allEstados: PersonStatus[] = [
 export function FilterPanel({
   selectedEstados,
   estadosMode,
+  carnetFilter,
   onEstadosChange,
   onEstadosModeChange,
+  onCarnetFilterChange,
   onClearFilters
 }: FilterPanelProps) {
   const handleEstadoToggle = (estado: PersonStatus) => {
@@ -46,7 +51,7 @@ export function FilterPanel({
           <Filter className="h-4 w-4 text-gray-600" />
           <span>Filtros</span>
         </div>
-        {selectedEstados.length > 0 && (
+        {(selectedEstados.length > 0 || carnetFilter !== 'all') && (
           <Button
             variant="ghost"
             size="sm"
@@ -57,6 +62,30 @@ export function FilterPanel({
             Limpiar
           </Button>
         )}
+      </div>
+
+      <div className="space-y-2">
+        <Label>Carnet</Label>
+        <RadioGroup value={carnetFilter} onValueChange={(value) => onCarnetFilterChange(value as CarnetFilter)}>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="all" id="carnet-all" />
+            <Label htmlFor="carnet-all" className="text-sm cursor-pointer">
+              Todos
+            </Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="with" id="carnet-with" />
+            <Label htmlFor="carnet-with" className="text-sm cursor-pointer">
+              Con carnet
+            </Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="without" id="carnet-without" />
+            <Label htmlFor="carnet-without" className="text-sm cursor-pointer">
+              Sin carnet
+            </Label>
+          </div>
+        </RadioGroup>
       </div>
 
       <div className="space-y-3">

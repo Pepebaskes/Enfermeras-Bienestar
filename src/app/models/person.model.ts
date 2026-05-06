@@ -33,6 +33,7 @@ export interface Person {
   calle: string;
   numeroCasa: string;
   colonia: string;
+  carnet?: boolean;
   telefono?: string;
   referencias?: string;
   observaciones?: string;
@@ -49,6 +50,7 @@ export interface PersonFormData {
   calle: string;
   numeroCasa: string;
   colonia: string;
+  carnet: boolean;
   telefono: string;
   referencias: string;
   observaciones: string;

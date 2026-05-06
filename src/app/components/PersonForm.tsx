@@ -40,6 +40,7 @@ export function PersonForm({ person, onSave, onCancel }: PersonFormProps) {
     calle: person?.calle || '',
     numeroCasa: person?.numeroCasa || '',
     colonia: person?.colonia || '',
+    carnet: person?.carnet ?? false,
     telefono: person?.telefono || '',
     referencias: person?.referencias || '',
     observaciones: person?.observaciones || '',
@@ -111,6 +112,7 @@ export function PersonForm({ person, onSave, onCancel }: PersonFormProps) {
       calle: toUpperValue(formData.calle),
       numeroCasa: toUpperValue(formData.numeroCasa),
       colonia: toUpperValue(formData.colonia),
+      carnet: formData.carnet,
       telefono: formData.telefono.trim() || undefined,
       referencias: formData.referencias ? toUpperValue(formData.referencias) : undefined,
       observaciones: formData.observaciones ? toUpperValue(formData.observaciones) : undefined,
@@ -274,6 +276,21 @@ export function PersonForm({ person, onSave, onCancel }: PersonFormProps) {
           <CardTitle className="text-lg leading-tight">Estados y Validaciones</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3 px-4 pb-4 sm:px-6 sm:pb-6">
+          <div className="flex min-h-10 items-start gap-3 rounded-md border bg-muted/30 p-3">
+            <Checkbox
+              id="carnet"
+              checked={formData.carnet}
+              onCheckedChange={(checked) => setFormData(prev => ({ ...prev, carnet: checked === true }))}
+              className="mt-0.5 size-5"
+            />
+            <label
+              htmlFor="carnet"
+              className="min-w-0 flex-1 cursor-pointer text-sm leading-5"
+            >
+              Carnet
+            </label>
+          </div>
+
           {allEstados.map((estado) => (
             <div key={estado} className="flex min-h-10 items-start gap-3 rounded-md border bg-muted/30 p-3">
               <Checkbox

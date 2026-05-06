@@ -1,5 +1,10 @@
 import { Person, PersonStatus } from '../models/person.model';
 
+const parseBooleanValue = (value: string): boolean => {
+  const normalized = value.trim().toLowerCase();
+  return ['si', 'sí', 'yes', 'true', '1', 'x'].includes(normalized);
+};
+
 export const parseCSV = (csvText: string): Person[] => {
   const lines = csvText.split('\n').filter(line => line.trim() !== '');
   if (lines.length === 0) return [];
@@ -30,6 +35,8 @@ export const parseCSV = (csvText: string): Person[] => {
         person.numeroCasa = value;
       } else if (headerLower.includes('colonia')) {
         person.colonia = value;
+      } else if (headerLower.includes('carnet')) {
+        person.carnet = parseBooleanValue(value);
       } else if (headerLower.includes('telefono') || headerLower.includes('teléfono')) {
         person.telefono = value;
       } else if (headerLower.includes('referencia')) {
@@ -44,6 +51,7 @@ export const parseCSV = (csvText: string): Person[] => {
     });
 
     if (person.nombreCompleto && person.calle && person.colonia) {
+      person.carnet = person.carnet ?? false;
       person.numeroVisita = person.numeroVisita ?? 0;
       persons.push(person as Person);
     }
@@ -80,6 +88,7 @@ export const exportToCSV = (persons: Person[]): string => {
     'Calle',
     'Número de Casa',
     'Colonia',
+    'Carnet',
     'Teléfono',
     'Referencias',
     'Observaciones',
@@ -97,6 +106,7 @@ export const exportToCSV = (persons: Person[]): string => {
       escapeCSVValue(person.calle),
       escapeCSVValue(person.numeroCasa),
       escapeCSVValue(person.colonia),
+      escapeCSVValue(person.carnet ? 'Si' : 'No'),
       escapeCSVValue(person.telefono || ''),
       escapeCSVValue(person.referencias || ''),
       escapeCSVValue(person.observaciones || ''),

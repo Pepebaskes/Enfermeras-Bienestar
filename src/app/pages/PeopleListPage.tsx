@@ -6,7 +6,7 @@ import { FilterPanel } from '../components/FilterPanel';
 import { DataTable } from '../components/DataTable';
 import { Button } from '../components/ui/button';
 import { ArrowLeft, Plus } from 'lucide-react';
-import { filterPersons, SearchType, SearchMode } from '../utils/filters';
+import { filterPersons, SearchType, SearchMode, CarnetFilter } from '../utils/filters';
 import { sortPersons, SortField, SortOrder } from '../utils/sorters';
 
 interface PeopleListPageProps {
@@ -20,6 +20,7 @@ export function PeopleListPage({ persons }: PeopleListPageProps) {
   const [searchMode, setSearchMode] = useState<SearchMode>('partial');
   const [selectedEstados, setSelectedEstados] = useState<PersonStatus[]>([]);
   const [estadosMode, setEstadosMode] = useState<'any' | 'all'>('any');
+  const [carnetFilter, setCarnetFilter] = useState<CarnetFilter>('all');
   const [sortField, setSortField] = useState<SortField>('nombre');
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
 
@@ -28,12 +29,13 @@ export function PeopleListPage({ persons }: PeopleListPageProps) {
       searchQuery,
       searchType,
       searchMode,
+      carnetFilter,
       estados: selectedEstados,
       estadosMode
     });
 
     return sortPersons(filtered, sortField, sortOrder);
-  }, [persons, searchQuery, searchType, searchMode, selectedEstados, estadosMode, sortField, sortOrder]);
+  }, [persons, searchQuery, searchType, searchMode, carnetFilter, selectedEstados, estadosMode, sortField, sortOrder]);
 
   const handleSearchChange = (query: string, type: SearchType, mode: SearchMode) => {
     setSearchQuery(query);
@@ -52,6 +54,7 @@ export function PeopleListPage({ persons }: PeopleListPageProps) {
 
   const handleClearFilters = () => {
     setSelectedEstados([]);
+    setCarnetFilter('all');
     setSearchQuery('');
   };
 
@@ -85,8 +88,10 @@ export function PeopleListPage({ persons }: PeopleListPageProps) {
           <FilterPanel
             selectedEstados={selectedEstados}
             estadosMode={estadosMode}
+            carnetFilter={carnetFilter}
             onEstadosChange={setSelectedEstados}
             onEstadosModeChange={setEstadosMode}
+            onCarnetFilterChange={setCarnetFilter}
             onClearFilters={handleClearFilters}
           />
         </div>

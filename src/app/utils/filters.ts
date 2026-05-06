@@ -2,6 +2,7 @@ import { Person, PersonStatus } from '../models/person.model';
 
 export type SearchType = 'all' | 'nombre' | 'domicilio' | 'colonia' | 'telefono';
 export type SearchMode = 'partial' | 'exact';
+export type CarnetFilter = 'all' | 'with' | 'without';
 
 export interface FilterOptions {
   searchQuery: string;
@@ -10,6 +11,7 @@ export interface FilterOptions {
   colonia?: string;
   calle?: string;
   numero?: string;
+  carnetFilter?: CarnetFilter;
   estados: PersonStatus[];
   estadosMode: 'any' | 'all';
 }
@@ -65,6 +67,14 @@ export const filterPersons = (persons: Person[], options: FilterOptions): Person
     }
 
     if (options.numero && person.numeroCasa !== options.numero) {
+      return false;
+    }
+
+    if (options.carnetFilter === 'with' && !person.carnet) {
+      return false;
+    }
+
+    if (options.carnetFilter === 'without' && person.carnet) {
       return false;
     }
 

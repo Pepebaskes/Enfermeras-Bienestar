@@ -53,6 +53,7 @@ export function DataTable({ persons, onSort, sortField, sortOrder }: DataTablePr
               <TableHead className="min-w-[150px]">
                 <SortButton field="colonia">Colonia</SortButton>
               </TableHead>
+              <TableHead className="min-w-[120px]">Carnet</TableHead>
               <TableHead className="min-w-[120px]">Teléfono</TableHead>
               <TableHead className="min-w-[110px]">
                 <SortButton field="visita">Visita</SortButton>
@@ -75,6 +76,9 @@ export function DataTable({ persons, onSort, sortField, sortOrder }: DataTablePr
                 </TableCell>
                 <TableCell onClick={() => navigate(`/personas/${person.id}`)}>
                   {person.colonia}
+                </TableCell>
+                <TableCell onClick={() => navigate(`/personas/${person.id}`)}>
+                  {person.carnet ? 'Si' : 'No'}
                 </TableCell>
                 <TableCell onClick={() => navigate(`/personas/${person.id}`)}>
                   {person.telefono || '-'}

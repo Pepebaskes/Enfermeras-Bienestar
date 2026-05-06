@@ -24,6 +24,7 @@ export function PersonFormPage({ persons, onSave }: PersonFormPageProps) {
       calle: data.calle!,
       numeroCasa: data.numeroCasa!,
       colonia: data.colonia!,
+      carnet: data.carnet ?? false,
       telefono: data.telefono,
       referencias: data.referencias,
       observaciones: data.observaciones,
