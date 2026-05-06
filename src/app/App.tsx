@@ -9,7 +9,7 @@ import { PersonFormPage } from './pages/PersonFormPage';
 import { ImportCSV } from './components/ImportCSV';
 import { ExportButton } from './components/ExportButton';
 import { exportToCSV, downloadCSV } from './services/csvService';
-import { saveToLocalStorage } from './services/storageService';
+import { loadFromLocalStorage, saveToLocalStorage } from './services/storageService';
 import { Toaster } from './components/ui/sonner';
 import { toast } from 'sonner';
 
@@ -18,8 +18,8 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setPersons(INITIAL_PATIENTS);
-    saveToLocalStorage(INITIAL_PATIENTS);
+    const savedPersons = loadFromLocalStorage();
+    setPersons(savedPersons.length > 0 ? savedPersons : INITIAL_PATIENTS);
     setIsLoading(false);
   }, []);
 
