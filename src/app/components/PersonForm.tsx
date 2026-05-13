@@ -10,8 +10,10 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
 interface PersonFormProps {
   person?: Person;
+  responsibleName: string;
   onSave: (data: Partial<Person>) => void;
   onCancel: () => void;
+  isSaving?: boolean;
 }
 
 const allEstados: PersonStatus[] = [
@@ -34,7 +36,7 @@ const getTodayDate = () => {
 
 const toUpperValue = (value: string) => value.trim().toUpperCase();
 
-export function PersonForm({ person, onSave, onCancel }: PersonFormProps) {
+export function PersonForm({ person, responsibleName, onSave, onCancel, isSaving = false }: PersonFormProps) {
   const [formData, setFormData] = useState({
     nombreCompleto: person?.nombreCompleto || '',
     calle: person?.calle || '',
@@ -46,8 +48,7 @@ export function PersonForm({ person, onSave, onCancel }: PersonFormProps) {
     observaciones: person?.observaciones || '',
     estados: person?.estados || [] as PersonStatus[],
     numeroVisita: person?.numeroVisita ?? 0,
-    fechaVisita: person?.fechaVisita || getTodayDate(),
-    enfermera: person?.enfermera || ''
+    fechaVisita: person?.fechaVisita || getTodayDate()
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -117,7 +118,7 @@ export function PersonForm({ person, onSave, onCancel }: PersonFormProps) {
       referencias: formData.referencias ? toUpperValue(formData.referencias) : undefined,
       observaciones: formData.observaciones ? toUpperValue(formData.observaciones) : undefined,
       fechaVisita: formData.fechaVisita || undefined,
-      enfermera: formData.enfermera ? toUpperValue(formData.enfermera) : undefined
+      enfermera: responsibleName
     };
 
     if (person) {
@@ -330,18 +331,12 @@ export function PersonForm({ person, onSave, onCancel }: PersonFormProps) {
           </div>
 
           <div className="min-w-0 space-y-2">
-            <Label htmlFor="enfermera" className="block text-sm leading-5 text-foreground">
-              Enfermera o Responsable <span className="text-red-500">*</span>
+            <Label className="block text-sm leading-5 text-foreground">
+              Enfermera responsable
             </Label>
-            <Input
-              id="enfermera"
-              value={formData.enfermera}
-              onChange={(e) => handleChange('enfermera', e.target.value)}
-              className={`min-h-12 border-sky-200 bg-sky-50/80 py-3 text-base leading-6 shadow-sm focus-visible:border-sky-500 ${errors.enfermera ? 'border-red-500' : ''}`}
-            />
-            {errors.enfermera && (
-              <p className="text-sm leading-5 text-red-500">{errors.enfermera}</p>
-            )}
+            <div className="min-h-12 rounded-md border border-sky-200 bg-slate-50 px-3 py-3 text-base leading-6 text-slate-900">
+              {responsibleName}
+            </div>
           </div>
 
           <div className="min-w-0 space-y-2">
@@ -363,8 +358,9 @@ export function PersonForm({ person, onSave, onCancel }: PersonFormProps) {
           type="submit"
           className="min-h-12 flex-1 text-base"
           size="lg"
+          disabled={isSaving}
         >
-          {person ? 'Guardar Cambios' : 'Crear Registro'}
+          {isSaving ? 'Guardando...' : person ? 'Guardar Cambios' : 'Crear Registro'}
         </Button>
         <Button
           type="button"
@@ -372,6 +368,7 @@ export function PersonForm({ person, onSave, onCancel }: PersonFormProps) {
           onClick={onCancel}
           className="min-h-12 flex-1 text-base"
           size="lg"
+          disabled={isSaving}
         >
           Cancelar
         </Button>

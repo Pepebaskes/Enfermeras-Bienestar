@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 
 interface PersonDetailPageProps {
   persons: Person[];
-  onRegisterNextVisit: (personId: string) => void;
+  onRegisterNextVisit: (personId: string) => Promise<void>;
 }
 
 export function PersonDetailPage({ persons, onRegisterNextVisit }: PersonDetailPageProps) {
@@ -36,9 +36,14 @@ export function PersonDetailPage({ persons, onRegisterNextVisit }: PersonDetailP
   const currentVisitNumber = person.numeroVisita || 0;
   const nextVisitNumber = currentVisitNumber + 1;
 
-  const handleRegisterNextVisit = () => {
-    onRegisterNextVisit(person.id);
-    toast.success(`Visita ${nextVisitNumber} registrada`);
+  const handleRegisterNextVisit = async () => {
+    try {
+      await onRegisterNextVisit(person.id);
+      toast.success(`Visita ${nextVisitNumber} registrada`);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Error al registrar la visita';
+      toast.error(message);
+    }
   };
 
   const handleCopyInfo = () => {

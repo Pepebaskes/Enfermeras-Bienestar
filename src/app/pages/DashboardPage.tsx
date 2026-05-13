@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router';
 import { Person } from '../models/person.model';
+import { PatientStats } from '../services/patientService';
 import { DashboardCards } from '../components/DashboardCards';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
@@ -9,11 +10,12 @@ import { ImportCSV } from '../components/ImportCSV';
 
 interface DashboardPageProps {
   persons: Person[];
+  stats?: PatientStats | null;
   onImportCSV: (persons: Person[]) => void;
   onExportCSV: () => void;
 }
 
-export function DashboardPage({ persons, onImportCSV, onExportCSV }: DashboardPageProps) {
+export function DashboardPage({ persons, stats, onImportCSV, onExportCSV }: DashboardPageProps) {
   const navigate = useNavigate();
 
   const ultimosRegistros = [...persons]
@@ -29,7 +31,7 @@ export function DashboardPage({ persons, onImportCSV, onExportCSV }: DashboardPa
         </div>
       </div>
 
-      <DashboardCards persons={persons} />
+      <DashboardCards persons={persons} stats={stats} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button

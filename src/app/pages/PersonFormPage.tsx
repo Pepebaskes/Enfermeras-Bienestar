@@ -1,5 +1,7 @@
 import { useNavigate, useParams } from 'react-router';
+import { useState } from 'react';
 import { Person } from '../models/person.model';
+import { Profile } from '../models/profile.model';
 import { PersonForm } from '../components/PersonForm';
 import { Button } from '../components/ui/button';
 import { ArrowLeft } from 'lucide-react';
@@ -7,19 +9,21 @@ import { toast } from 'sonner';
 
 interface PersonFormPageProps {
   persons: Person[];
-  onSave: (person: Person) => void;
+  profile: Profile;
+  onSave: (person: Person) => Promise<void>;
 }
 
-export function PersonFormPage({ persons, onSave }: PersonFormPageProps) {
+export function PersonFormPage({ persons, profile, onSave }: PersonFormPageProps) {
   const navigate = useNavigate();
   const { id } = useParams();
 
   const person = id ? persons.find(p => p.id === id) : undefined;
   const isEdit = !!person;
+  const [isSaving, setIsSaving] = useState(false);
 
-  const handleSave = (data: Partial<Person>) => {
+  const handleSave = async (data: Partial<Person>) => {
     const newPerson: Person = {
-      id: data.id || crypto.randomUUID(),
+      id: data.id || '',
       nombreCompleto: data.nombreCompleto!,
       calle: data.calle!,
       numeroCasa: data.numeroCasa!,
@@ -31,14 +35,22 @@ export function PersonFormPage({ persons, onSave }: PersonFormPageProps) {
       estados: data.estados || [],
       numeroVisita: data.numeroVisita ?? 0,
       fechaVisita: data.fechaVisita,
-      enfermera: data.enfermera,
+      enfermera: profile.nombre,
       ultimaActualizacion: new Date().toISOString(),
       fechaCreacion: data.fechaCreacion || new Date().toISOString()
     };
 
-    onSave(newPerson);
-    toast.success(isEdit ? 'Registro actualizado exitosamente' : 'Registro creado exitosamente');
-    navigate('/personas');
+    try {
+      setIsSaving(true);
+      await onSave(newPerson);
+      toast.success(isEdit ? 'Registro actualizado exitosamente' : 'Registro creado exitosamente');
+      navigate('/personas');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Error al guardar el registro';
+      toast.error(message);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -60,8 +72,10 @@ export function PersonFormPage({ persons, onSave }: PersonFormPageProps) {
 
       <PersonForm
         person={person}
+        responsibleName={profile.nombre}
         onSave={handleSave}
         onCancel={() => navigate(-1)}
+        isSaving={isSaving}
       />
     </div>
   );

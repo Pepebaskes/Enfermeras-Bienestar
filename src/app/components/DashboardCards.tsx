@@ -1,19 +1,21 @@
 import { Person } from '../models/person.model';
+import { PatientStats } from '../services/patientService';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Users, UserCheck, UserX, MapPin, XCircle, Globe, Ban } from 'lucide-react';
 
 interface DashboardCardsProps {
   persons: Person[];
+  stats?: PatientStats | null;
 }
 
-export function DashboardCards({ persons }: DashboardCardsProps) {
-  const total = persons.length;
-  const visitados = persons.filter(p => (p.numeroVisita || 0) > 0 || p.estados.includes('visitado')).length;
-  const sinVisita = persons.filter(p => (p.numeroVisita || 0) === 0).length;
-  const cambioDomicilio = persons.filter(p => p.estados.includes('cambio_domicilio')).length;
-  const noQuiso = persons.filter(p => p.estados.includes('no_quiso_programa')).length;
-  const fueraPais = persons.filter(p => p.estados.includes('fuera_del_pais')).length;
-  const finados = persons.filter(p => p.estados.includes('finado')).length;
+export function DashboardCards({ persons, stats: remoteStats }: DashboardCardsProps) {
+  const total = remoteStats?.total ?? persons.length;
+  const visitados = remoteStats?.visitados ?? persons.filter(p => (p.numeroVisita || 0) > 0 || p.estados.includes('visitado')).length;
+  const sinVisita = remoteStats?.sinVisita ?? persons.filter(p => (p.numeroVisita || 0) === 0).length;
+  const cambioDomicilio = remoteStats?.cambioDomicilio ?? persons.filter(p => p.estados.includes('cambio_domicilio')).length;
+  const noQuiso = remoteStats?.noQuiso ?? persons.filter(p => p.estados.includes('no_quiso_programa')).length;
+  const fueraPais = remoteStats?.fueraPais ?? persons.filter(p => p.estados.includes('fuera_del_pais')).length;
+  const finados = remoteStats?.finados ?? persons.filter(p => p.estados.includes('finado')).length;
 
   const stats = [
     {

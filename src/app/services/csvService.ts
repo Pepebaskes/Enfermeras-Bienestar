@@ -1,4 +1,6 @@
 import { Person, PersonStatus } from '../models/person.model';
+import { Profile } from '../models/profile.model';
+import { Subscription } from '../models/subscription.model';
 
 const parseBooleanValue = (value: string): boolean => {
   const normalized = value.trim().toLowerCase();
@@ -96,6 +98,9 @@ export const exportToCSV = (persons: Person[]): string => {
     'Estados',
     'Fecha de Visita',
     'Enfermera',
+    'Creado por',
+    'Actualizado por',
+    'Fecha de Creacion',
     'Última Actualización'
   ];
 
@@ -114,6 +119,9 @@ export const exportToCSV = (persons: Person[]): string => {
       escapeCSVValue(estados),
       escapeCSVValue(person.fechaVisita || ''),
       escapeCSVValue(person.enfermera || ''),
+      escapeCSVValue(person.creadoPorNombre || ''),
+      escapeCSVValue(person.actualizadoPorNombre || ''),
+      escapeCSVValue(person.fechaCreacion ? new Date(person.fechaCreacion).toLocaleString('es-MX') : ''),
       escapeCSVValue(new Date(person.ultimaActualizacion).toLocaleString('es-MX'))
     ];
   });
@@ -124,6 +132,48 @@ export const exportToCSV = (persons: Person[]): string => {
   ].join('\n');
 
   return csvContent;
+};
+
+export const exportAdminSummaryToCSV = (
+  profiles: Profile[],
+  subscriptions: Subscription[],
+  patientTotalsByOwner: Record<string, number>
+): string => {
+  const headers = [
+    'Nombre',
+    'Correo',
+    'Ciudad',
+    'Rol',
+    'Estado',
+    'Fecha de pago',
+    'Estado de suscripcion',
+    'Inicio de suscripcion',
+    'Vencimiento de suscripcion',
+    'Pacientes',
+    'Notas'
+  ];
+
+  const rows = profiles.map(profile => {
+    const subscription = subscriptions.find(item => item.user_id === profile.id);
+    return [
+      escapeCSVValue(profile.nombre),
+      escapeCSVValue(profile.email),
+      escapeCSVValue(profile.ciudad || ''),
+      escapeCSVValue(profile.rol),
+      escapeCSVValue(profile.estado),
+      escapeCSVValue(profile.fecha_pago || ''),
+      escapeCSVValue(subscription?.estado || ''),
+      escapeCSVValue(subscription?.fecha_inicio || ''),
+      escapeCSVValue(subscription?.fecha_vencimiento || ''),
+      escapeCSVValue(String(patientTotalsByOwner[profile.id] || 0)),
+      escapeCSVValue(subscription?.notas || '')
+    ];
+  });
+
+  return [
+    headers.join(','),
+    ...rows.map(row => row.join(','))
+  ].join('\n');
 };
 
 const escapeCSVValue = (value: string): string => {

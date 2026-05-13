@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Person, PersonStatus } from '../models/person.model';
 import { SearchBar } from '../components/SearchBar';
@@ -6,14 +6,20 @@ import { FilterPanel } from '../components/FilterPanel';
 import { DataTable } from '../components/DataTable';
 import { Button } from '../components/ui/button';
 import { ArrowLeft, Plus } from 'lucide-react';
-import { filterPersons, SearchType, SearchMode, CarnetFilter } from '../utils/filters';
+import { SearchType, SearchMode, CarnetFilter } from '../utils/filters';
 import { sortPersons, SortField, SortOrder } from '../utils/sorters';
+import { PatientQueryOptions } from '../services/patientService';
 
 interface PeopleListPageProps {
   persons: Person[];
+  total: number;
+  isLoading: boolean;
+  onLoadPatients: (options: PatientQueryOptions, append?: boolean) => Promise<void>;
 }
 
-export function PeopleListPage({ persons }: PeopleListPageProps) {
+const PAGE_SIZE = 100;
+
+export function PeopleListPage({ persons, total, isLoading, onLoadPatients }: PeopleListPageProps) {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchType, setSearchType] = useState<SearchType>('all');
@@ -23,27 +29,40 @@ export function PeopleListPage({ persons }: PeopleListPageProps) {
   const [carnetFilter, setCarnetFilter] = useState<CarnetFilter>('all');
   const [sortField, setSortField] = useState<SortField>('nombre');
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
+  const [page, setPage] = useState(0);
 
-  const filteredPersons = useMemo(() => {
-    const filtered = filterPersons(persons, {
-      searchQuery,
-      searchType,
-      searchMode,
-      carnetFilter,
-      estados: selectedEstados,
-      estadosMode
-    });
+  const queryOptions = useMemo<PatientQueryOptions>(() => ({
+    page,
+    pageSize: PAGE_SIZE,
+    searchQuery,
+    searchType,
+    searchMode,
+    carnetFilter,
+    estados: selectedEstados,
+    estadosMode,
+    sortField,
+    sortOrder
+  }), [page, searchQuery, searchType, searchMode, carnetFilter, selectedEstados, estadosMode, sortField, sortOrder]);
 
-    return sortPersons(filtered, sortField, sortOrder);
-  }, [persons, searchQuery, searchType, searchMode, carnetFilter, selectedEstados, estadosMode, sortField, sortOrder]);
+  useEffect(() => {
+    onLoadPatients(queryOptions, page > 0);
+  }, [queryOptions, onLoadPatients]);
+
+  const visiblePersons = useMemo(() => {
+    return sortPersons(persons, sortField, sortOrder);
+  }, [persons, sortField, sortOrder]);
+
+  const hasMore = persons.length < total;
 
   const handleSearchChange = (query: string, type: SearchType, mode: SearchMode) => {
+    setPage(0);
     setSearchQuery(query);
     setSearchType(type);
     setSearchMode(mode);
   };
 
   const handleSort = (field: SortField) => {
+    setPage(0);
     if (sortField === field) {
       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
     } else {
@@ -53,9 +72,14 @@ export function PeopleListPage({ persons }: PeopleListPageProps) {
   };
 
   const handleClearFilters = () => {
+    setPage(0);
     setSelectedEstados([]);
     setCarnetFilter('all');
     setSearchQuery('');
+  };
+
+  const handleLoadMore = () => {
+    setPage(prev => prev + 1);
   };
 
   return (
@@ -89,23 +113,43 @@ export function PeopleListPage({ persons }: PeopleListPageProps) {
             selectedEstados={selectedEstados}
             estadosMode={estadosMode}
             carnetFilter={carnetFilter}
-            onEstadosChange={setSelectedEstados}
-            onEstadosModeChange={setEstadosMode}
-            onCarnetFilterChange={setCarnetFilter}
+            onEstadosChange={(estados) => {
+              setPage(0);
+              setSelectedEstados(estados);
+            }}
+            onEstadosModeChange={(mode) => {
+              setPage(0);
+              setEstadosMode(mode);
+            }}
+            onCarnetFilterChange={(filter) => {
+              setPage(0);
+              setCarnetFilter(filter);
+            }}
             onClearFilters={handleClearFilters}
           />
         </div>
 
         <div className="lg:col-span-3 space-y-4">
           <div className="text-sm text-gray-600">
-            Mostrando {filteredPersons.length} de {persons.length} registros
+            Mostrando {persons.length} de {total} registros
+            {isLoading ? ' - cargando...' : ''}
           </div>
           <DataTable
-            persons={filteredPersons}
+            persons={visiblePersons}
             onSort={handleSort}
             sortField={sortField}
             sortOrder={sortOrder}
           />
+          {hasMore && (
+            <Button
+              variant="outline"
+              className="h-12 w-full"
+              onClick={handleLoadMore}
+              disabled={isLoading}
+            >
+              {isLoading ? 'Cargando...' : `Cargar ${Math.min(PAGE_SIZE, total - persons.length)} mas`}
+            </Button>
+          )}
         </div>
       </div>
     </div>

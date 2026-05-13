@@ -45,10 +45,6 @@ export const validatePersonForm = (data: Partial<PersonFormData>): ValidationErr
     errors.push({ field: 'fechaVisita', message: 'La fecha de visita es obligatoria' });
   }
 
-  if (!data.enfermera || data.enfermera.trim() === '') {
-    errors.push({ field: 'enfermera', message: 'La enfermera o responsable es obligatorio' });
-  }
-
   return errors;
 };
 

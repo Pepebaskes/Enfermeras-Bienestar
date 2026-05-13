@@ -41,6 +41,10 @@ export interface Person {
   numeroVisita: number;
   fechaVisita?: string;
   enfermera?: string;
+  creadoPorId?: string;
+  creadoPorNombre?: string;
+  actualizadoPorId?: string;
+  actualizadoPorNombre?: string;
   ultimaActualizacion: string;
   fechaCreacion: string;
 }
