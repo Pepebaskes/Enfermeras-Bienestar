@@ -35,6 +35,19 @@ export function PersonDetailPage({ persons, onRegisterNextVisit }: PersonDetailP
 
   const currentVisitNumber = person.numeroVisita || 0;
   const nextVisitNumber = currentVisitNumber + 1;
+  const hasValue = (value: unknown) => value !== undefined && value !== null && value !== '';
+  const renderField = (label: string, value: unknown) => hasValue(value) ? (
+    <div>
+      <span className="text-sm text-gray-600">{label}:</span>
+      <p className="text-base whitespace-pre-wrap">{String(value)}</p>
+    </div>
+  ) : null;
+  const renderDateTimeField = (label: string, value?: string) => value ? (
+    <div>
+      <span className="text-sm text-gray-600">{label}:</span>
+      <p className="text-base">{new Date(value).toLocaleString('es-MX')}</p>
+    </div>
+  ) : null;
 
   const handleRegisterNextVisit = async () => {
     try {
@@ -177,6 +190,102 @@ Teléfono: ${person.telefono || 'No disponible'}
           </CardHeader>
           <CardContent>
             <p className="text-base whitespace-pre-wrap">{person.observaciones}</p>
+          </CardContent>
+        </Card>
+      )}
+
+      {(hasValue(person.edad) || hasValue(person.pamOPcd) || hasValue(person.grupoRiesgo) || hasValue(person.enfermedades)) && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Datos generales Salud Casa por Casa</CardTitle>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {renderField('Edad', person.edad)}
+            {renderField('PAM o PCD', person.pamOPcd)}
+            {renderField('Grupo de riesgo', person.grupoRiesgo)}
+            <div className="sm:col-span-2">{renderField('Enfermedades', person.enfermedades)}</div>
+          </CardContent>
+        </Card>
+      )}
+
+      {(hasValue(person.taSistolica) || hasValue(person.taDiastolica) || hasValue(person.frecuenciaRespiratoria) || hasValue(person.temperatura) || hasValue(person.escalaGlasgow) || hasValue(person.frecuenciaCardiaca) || hasValue(person.peso) || hasValue(person.talla) || hasValue(person.saturacion)) && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Signos vitales</CardTitle>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            {renderField('TA sistolica', person.taSistolica)}
+            {renderField('TA diastolica', person.taDiastolica)}
+            {renderField('Frecuencia respiratoria', person.frecuenciaRespiratoria)}
+            {renderField('Temperatura', person.temperatura)}
+            {renderField('Escala Glasgow', person.escalaGlasgow)}
+            {renderField('Frecuencia cardiaca', person.frecuenciaCardiaca)}
+            {renderField('Peso', person.peso)}
+            {renderField('Talla', person.talla)}
+            {renderField('Saturacion', person.saturacion)}
+          </CardContent>
+        </Card>
+      )}
+
+      {(hasValue(person.exploracionFisica) || hasValue(person.diagnostico) || hasValue(person.tratamiento)) && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Exploracion / diagnostico / tratamiento</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {renderField('Exploracion fisica', person.exploracionFisica)}
+            {renderField('Diagnostico', person.diagnostico)}
+            {renderField('Tratamiento', person.tratamiento)}
+          </CardContent>
+        </Card>
+      )}
+
+      {(hasValue(person.glucosaResultado) || hasValue(person.trigliceridosResultado) || hasValue(person.colesterolResultado)) && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Pruebas medicas</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 gap-3 rounded-md border p-3 sm:grid-cols-3">
+              {renderField('Glucosa horas ayuno', person.glucosaHorasAyuno)}
+              {renderField('Glucosa resultado', person.glucosaResultado)}
+              {renderDateTimeField('Glucosa muestra', person.glucosaFechaHoraMuestra)}
+            </div>
+            <div className="grid grid-cols-1 gap-3 rounded-md border p-3 sm:grid-cols-3">
+              {renderField('Trigliceridos horas ayuno', person.trigliceridosHorasAyuno)}
+              {renderField('Trigliceridos resultado', person.trigliceridosResultado)}
+              {renderDateTimeField('Trigliceridos muestra', person.trigliceridosFechaHoraMuestra)}
+            </div>
+            <div className="grid grid-cols-1 gap-3 rounded-md border p-3 sm:grid-cols-3">
+              {renderField('Colesterol horas ayuno', person.colesterolHorasAyuno)}
+              {renderField('Colesterol resultado', person.colesterolResultado)}
+              {renderDateTimeField('Colesterol muestra', person.colesterolFechaHoraMuestra)}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {(hasValue(person.pantorrillaCm) || hasValue(person.brazoCm) || hasValue(person.cinturaCm)) && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Mediciones</CardTitle>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            {renderField('Pantorrilla (cm)', person.pantorrillaCm)}
+            {renderField('Brazo (cm)', person.brazoCm)}
+            {renderField('Cintura (cm)', person.cinturaCm)}
+          </CardContent>
+        </Card>
+      )}
+
+      {(hasValue(person.discapacidad) || hasValue(person.nota)) && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Discapacidad / notas</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {renderField('Discapacidad', person.discapacidad)}
+            {renderField('Nota', person.nota)}
           </CardContent>
         </Card>
       )}

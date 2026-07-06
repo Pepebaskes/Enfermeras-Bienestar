@@ -23,6 +23,36 @@ interface PatientRow {
   created_by_name: string | null;
   updated_by: string | null;
   updated_by_name: string | null;
+  edad: number | null;
+  pam_o_pcd: string | null;
+  enfermedades: string | null;
+  exploracion_fisica: string | null;
+  diagnostico: string | null;
+  tratamiento: string | null;
+  ta_sistolica: number | null;
+  ta_diastolica: number | null;
+  frecuencia_respiratoria: number | null;
+  temperatura: number | null;
+  escala_glasgow: number | null;
+  grupo_riesgo: string | null;
+  frecuencia_cardiaca: number | null;
+  peso: number | null;
+  talla: number | null;
+  saturacion: number | null;
+  glucosa_horas_ayuno: number | null;
+  glucosa_resultado: number | null;
+  glucosa_fecha_hora_muestra: string | null;
+  trigliceridos_horas_ayuno: number | null;
+  trigliceridos_resultado: number | null;
+  trigliceridos_fecha_hora_muestra: string | null;
+  colesterol_horas_ayuno: number | null;
+  colesterol_resultado: number | null;
+  colesterol_fecha_hora_muestra: string | null;
+  pantorrilla_cm: number | null;
+  brazo_cm: number | null;
+  cintura_cm: number | null;
+  discapacidad: string | null;
+  nota: string | null;
   creado_en: string;
   actualizado_en: string;
 }
@@ -80,6 +110,15 @@ const sortColumnByField: Record<SortField, string> = {
 
 const escapeSearchValue = (value: string) => value.replace(/[%_]/g, '\\$&').replace(/,/g, '\\,');
 
+const nullableString = (value?: string) => {
+  const trimmedValue = value?.trim();
+  return trimmedValue ? trimmedValue : null;
+};
+
+const nullableNumber = (value?: number) => {
+  return typeof value === 'number' && Number.isFinite(value) ? value : null;
+};
+
 const mapPatientRowToPerson = (row: PatientRow): Person => ({
   id: row.id,
   nombreCompleto: row.nombre_completo,
@@ -98,24 +137,88 @@ const mapPatientRowToPerson = (row: PatientRow): Person => ({
   creadoPorNombre: row.created_by_name || undefined,
   actualizadoPorId: row.updated_by || undefined,
   actualizadoPorNombre: row.updated_by_name || undefined,
+  edad: row.edad ?? undefined,
+  pamOPcd: row.pam_o_pcd ?? undefined,
+  enfermedades: row.enfermedades ?? undefined,
+  exploracionFisica: row.exploracion_fisica ?? undefined,
+  diagnostico: row.diagnostico ?? undefined,
+  tratamiento: row.tratamiento ?? undefined,
+  taSistolica: row.ta_sistolica ?? undefined,
+  taDiastolica: row.ta_diastolica ?? undefined,
+  frecuenciaRespiratoria: row.frecuencia_respiratoria ?? undefined,
+  temperatura: row.temperatura ?? undefined,
+  escalaGlasgow: row.escala_glasgow ?? undefined,
+  grupoRiesgo: row.grupo_riesgo ?? undefined,
+  frecuenciaCardiaca: row.frecuencia_cardiaca ?? undefined,
+  peso: row.peso ?? undefined,
+  talla: row.talla ?? undefined,
+  saturacion: row.saturacion ?? undefined,
+  glucosaHorasAyuno: row.glucosa_horas_ayuno ?? undefined,
+  glucosaResultado: row.glucosa_resultado ?? undefined,
+  glucosaFechaHoraMuestra: row.glucosa_fecha_hora_muestra ?? undefined,
+  trigliceridosHorasAyuno: row.trigliceridos_horas_ayuno ?? undefined,
+  trigliceridosResultado: row.trigliceridos_resultado ?? undefined,
+  trigliceridosFechaHoraMuestra: row.trigliceridos_fecha_hora_muestra ?? undefined,
+  colesterolHorasAyuno: row.colesterol_horas_ayuno ?? undefined,
+  colesterolResultado: row.colesterol_resultado ?? undefined,
+  colesterolFechaHoraMuestra: row.colesterol_fecha_hora_muestra ?? undefined,
+  pantorrillaCm: row.pantorrilla_cm ?? undefined,
+  brazoCm: row.brazo_cm ?? undefined,
+  cinturaCm: row.cintura_cm ?? undefined,
+  discapacidad: row.discapacidad ?? undefined,
+  nota: row.nota ?? undefined,
   fechaCreacion: row.creado_en,
   ultimaActualizacion: row.actualizado_en
 });
 
-const mapPersonToPatientInsert = (person: Person, profile: Profile) => ({
-  owner_id: profile.id,
+const mapPersonToPatientBase = (person: Person, profile: Profile) => ({
   nombre_completo: person.nombreCompleto,
   calle: person.calle,
   numero_casa: person.numeroCasa,
   colonia: person.colonia,
-  telefono: person.telefono || null,
-  referencias: person.referencias || null,
-  observaciones: person.observaciones || null,
+  telefono: nullableString(person.telefono),
+  referencias: nullableString(person.referencias),
+  observaciones: nullableString(person.observaciones),
   carnet: person.carnet ?? false,
   estados: person.estados || [],
   numero_visita: person.numeroVisita || 0,
   fecha_visita: toDateValue(person.fechaVisita),
   enfermera: profile.nombre,
+  edad: nullableNumber(person.edad),
+  pam_o_pcd: nullableString(person.pamOPcd),
+  enfermedades: nullableString(person.enfermedades),
+  exploracion_fisica: nullableString(person.exploracionFisica),
+  diagnostico: nullableString(person.diagnostico),
+  tratamiento: nullableString(person.tratamiento),
+  ta_sistolica: nullableNumber(person.taSistolica),
+  ta_diastolica: nullableNumber(person.taDiastolica),
+  frecuencia_respiratoria: nullableNumber(person.frecuenciaRespiratoria),
+  temperatura: nullableNumber(person.temperatura),
+  escala_glasgow: nullableNumber(person.escalaGlasgow),
+  grupo_riesgo: nullableString(person.grupoRiesgo),
+  frecuencia_cardiaca: nullableNumber(person.frecuenciaCardiaca),
+  peso: nullableNumber(person.peso),
+  talla: nullableNumber(person.talla),
+  saturacion: nullableNumber(person.saturacion),
+  glucosa_horas_ayuno: nullableNumber(person.glucosaHorasAyuno),
+  glucosa_resultado: nullableNumber(person.glucosaResultado),
+  glucosa_fecha_hora_muestra: person.glucosaFechaHoraMuestra || null,
+  trigliceridos_horas_ayuno: nullableNumber(person.trigliceridosHorasAyuno),
+  trigliceridos_resultado: nullableNumber(person.trigliceridosResultado),
+  trigliceridos_fecha_hora_muestra: person.trigliceridosFechaHoraMuestra || null,
+  colesterol_horas_ayuno: nullableNumber(person.colesterolHorasAyuno),
+  colesterol_resultado: nullableNumber(person.colesterolResultado),
+  colesterol_fecha_hora_muestra: person.colesterolFechaHoraMuestra || null,
+  pantorrilla_cm: nullableNumber(person.pantorrillaCm),
+  brazo_cm: nullableNumber(person.brazoCm),
+  cintura_cm: nullableNumber(person.cinturaCm),
+  discapacidad: nullableString(person.discapacidad),
+  nota: nullableString(person.nota)
+});
+
+const mapPersonToPatientInsert = (person: Person, profile: Profile) => ({
+  owner_id: profile.id,
+  ...mapPersonToPatientBase(person, profile),
   created_by: profile.id,
   created_by_name: profile.nombre,
   updated_by: profile.id,
@@ -123,36 +226,55 @@ const mapPersonToPatientInsert = (person: Person, profile: Profile) => ({
 });
 
 const mapPersonToPatientUpdate = (person: Person, profile: Profile) => ({
-  nombre_completo: person.nombreCompleto,
-  calle: person.calle,
-  numero_casa: person.numeroCasa,
-  colonia: person.colonia,
-  telefono: person.telefono || null,
-  referencias: person.referencias || null,
-  observaciones: person.observaciones || null,
-  carnet: person.carnet ?? false,
-  estados: person.estados || [],
-  numero_visita: person.numeroVisita || 0,
-  fecha_visita: toDateValue(person.fechaVisita),
-  enfermera: profile.nombre,
+  ...mapPersonToPatientBase(person, profile),
   updated_by: profile.id,
   updated_by_name: profile.nombre,
   actualizado_en: new Date().toISOString()
 });
 
-const removeAuditFields = <T extends Record<string, unknown>>(payload: T) => {
+const removeSchemaExtensionFields = <T extends Record<string, unknown>>(payload: T) => {
   const {
     created_by,
     created_by_name,
     updated_by,
     updated_by_name,
+    edad,
+    pam_o_pcd,
+    enfermedades,
+    exploracion_fisica,
+    diagnostico,
+    tratamiento,
+    ta_sistolica,
+    ta_diastolica,
+    frecuencia_respiratoria,
+    temperatura,
+    escala_glasgow,
+    grupo_riesgo,
+    frecuencia_cardiaca,
+    peso,
+    talla,
+    saturacion,
+    glucosa_horas_ayuno,
+    glucosa_resultado,
+    glucosa_fecha_hora_muestra,
+    trigliceridos_horas_ayuno,
+    trigliceridos_resultado,
+    trigliceridos_fecha_hora_muestra,
+    colesterol_horas_ayuno,
+    colesterol_resultado,
+    colesterol_fecha_hora_muestra,
+    pantorrilla_cm,
+    brazo_cm,
+    cintura_cm,
+    discapacidad,
+    nota,
     ...payloadWithoutAudit
   } = payload;
 
   return payloadWithoutAudit;
 };
 
-const isAuditSchemaCacheError = (message: string) => {
+const isExtensionSchemaCacheError = (message: string) => {
   const normalizedMessage = message.toLowerCase();
   return normalizedMessage.includes('schema cache')
     && (
@@ -160,6 +282,18 @@ const isAuditSchemaCacheError = (message: string) => {
       || normalizedMessage.includes('created_by_name')
       || normalizedMessage.includes('updated_by')
       || normalizedMessage.includes('updated_by_name')
+      || normalizedMessage.includes('edad')
+      || normalizedMessage.includes('pam_o_pcd')
+      || normalizedMessage.includes('enfermedades')
+      || normalizedMessage.includes('exploracion_fisica')
+      || normalizedMessage.includes('diagnostico')
+      || normalizedMessage.includes('tratamiento')
+      || normalizedMessage.includes('ta_sistolica')
+      || normalizedMessage.includes('glucosa_resultado')
+      || normalizedMessage.includes('trigliceridos_resultado')
+      || normalizedMessage.includes('colesterol_resultado')
+      || normalizedMessage.includes('pantorrilla_cm')
+      || normalizedMessage.includes('discapacidad')
     );
 };
 
@@ -387,10 +521,10 @@ export const savePatient = async (person: Person, profile: Profile): Promise<Per
       .select('*')
       .single();
 
-    if (error && isAuditSchemaCacheError(error.message)) {
+    if (error && isExtensionSchemaCacheError(error.message)) {
       const retry = await supabase
         .from('patients')
-        .insert(removeAuditFields(insertPayload))
+        .insert(removeSchemaExtensionFields(insertPayload))
         .select('*')
         .single();
 
@@ -413,10 +547,10 @@ export const savePatient = async (person: Person, profile: Profile): Promise<Per
     .select('*')
     .single();
 
-  if (error && isAuditSchemaCacheError(error.message)) {
+  if (error && isExtensionSchemaCacheError(error.message)) {
     const retry = await supabase
       .from('patients')
-      .update(removeAuditFields(updatePayload))
+      .update(removeSchemaExtensionFields(updatePayload))
       .eq('id', person.id)
       .select('*')
       .single();
