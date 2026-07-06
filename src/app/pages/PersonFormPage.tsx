@@ -1,11 +1,12 @@
 import { useNavigate, useParams } from 'react-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Person } from '../models/person.model';
 import { Profile } from '../models/profile.model';
 import { PersonForm } from '../components/PersonForm';
 import { Button } from '../components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
+import { fetchPatientById } from '../services/patientService';
 
 interface PersonFormPageProps {
   persons: Person[];
@@ -17,13 +18,49 @@ export function PersonFormPage({ persons, profile, onSave }: PersonFormPageProps
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const person = id ? persons.find(p => p.id === id) : undefined;
-  const isEdit = !!person;
+  const localPerson = id ? persons.find(p => p.id === id) : undefined;
+  const [remotePerson, setRemotePerson] = useState<Person | undefined>(localPerson);
+  const [isLoadingPerson, setIsLoadingPerson] = useState(Boolean(id));
+  const person = remotePerson || localPerson;
+  const isEdit = Boolean(id);
   const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadFreshPerson = async () => {
+      if (!id) {
+        setIsLoadingPerson(false);
+        setRemotePerson(undefined);
+        return;
+      }
+
+      setIsLoadingPerson(true);
+      try {
+        const freshPerson = await fetchPatientById(id);
+        if (isMounted) {
+          setRemotePerson(freshPerson);
+        }
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'No se pudo cargar el paciente';
+        toast.error(message);
+      } finally {
+        if (isMounted) {
+          setIsLoadingPerson(false);
+        }
+      }
+    };
+
+    loadFreshPerson();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [id]);
 
   const handleSave = async (data: Partial<Person>) => {
     const newPerson: Person = {
-      id: data.id || '',
+      id: data.id || id || '',
       nombreCompleto: data.nombreCompleto!,
       calle: data.calle!,
       numeroCasa: data.numeroCasa!,
@@ -70,13 +107,24 @@ export function PersonFormPage({ persons, profile, onSave }: PersonFormPageProps
         </h1>
       </div>
 
-      <PersonForm
-        person={person}
-        responsibleName={profile.nombre}
-        onSave={handleSave}
-        onCancel={() => navigate(-1)}
-        isSaving={isSaving}
-      />
+      {isLoadingPerson ? (
+        <div className="rounded-lg border bg-white p-6 text-center text-muted-foreground">
+          Cargando informacion actualizada del paciente...
+        </div>
+      ) : isEdit && !person ? (
+        <div className="rounded-lg border bg-white p-6 text-center">
+          <p className="text-muted-foreground">No se encontro el paciente.</p>
+          <Button className="mt-4" onClick={() => navigate('/personas')}>Volver al listado</Button>
+        </div>
+      ) : (
+        <PersonForm
+          person={person}
+          responsibleName={profile.nombre}
+          onSave={handleSave}
+          onCancel={() => navigate(-1)}
+          isSaving={isSaving}
+        />
+      )}
     </div>
   );
 }

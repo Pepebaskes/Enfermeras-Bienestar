@@ -49,6 +49,10 @@ export interface PatientQueryOptions {
   ownerId?: string;
   updatedFrom?: string;
   updatedTo?: string;
+  visitDateFrom?: string;
+  visitDateTo?: string;
+  visitNumber?: number | null;
+  visitPresence?: 'all' | 'with' | 'without';
   sortField?: SortField;
   sortOrder?: SortOrder;
 }
@@ -191,6 +195,26 @@ const applyPatientFilters = (
     filteredQuery = filteredQuery.lte('actualizado_en', `${options.updatedTo}T23:59:59.999`);
   }
 
+  if (options.visitDateFrom) {
+    filteredQuery = filteredQuery.gte('fecha_visita', options.visitDateFrom);
+  }
+
+  if (options.visitDateTo) {
+    filteredQuery = filteredQuery.lte('fecha_visita', options.visitDateTo);
+  }
+
+  if (options.visitPresence === 'with') {
+    filteredQuery = filteredQuery.gt('numero_visita', 0);
+  }
+
+  if (options.visitPresence === 'without') {
+    filteredQuery = filteredQuery.eq('numero_visita', 0);
+  }
+
+  if (typeof options.visitNumber === 'number' && options.visitNumber >= 0) {
+    filteredQuery = filteredQuery.eq('numero_visita', options.visitNumber);
+  }
+
   if (searchQuery) {
     const value = escapeSearchValue(searchQuery);
     const pattern = searchMode === 'exact' ? value : `%${value}%`;
@@ -286,6 +310,20 @@ export const fetchAllPatients = async (options: FetchAllPatientsOptions = {}): P
   }
 
   return allPatients;
+};
+
+export const fetchPatientById = async (patientId: string): Promise<Person> => {
+  const { data, error } = await supabase
+    .from('patients')
+    .select('*')
+    .eq('id', patientId)
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return mapPatientRowToPerson(data as PatientRow);
 };
 
 const countPatients = async (

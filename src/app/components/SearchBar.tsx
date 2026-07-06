@@ -40,9 +40,9 @@ export function SearchBar({ onSearchChange }: SearchBarProps) {
           className="pl-10 h-12 text-base"
         />
       </div>
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
         <Select value={searchType} onValueChange={handleTypeChange}>
-          <SelectTrigger className="h-11">
+          <SelectTrigger className="h-11 min-w-0">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -54,7 +54,7 @@ export function SearchBar({ onSearchChange }: SearchBarProps) {
           </SelectContent>
         </Select>
         <Select value={searchMode} onValueChange={handleModeChange}>
-          <SelectTrigger className="h-11">
+          <SelectTrigger className="h-11 min-w-0">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

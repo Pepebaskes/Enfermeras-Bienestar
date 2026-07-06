@@ -1,6 +1,7 @@
 import { PersonStatus, STATUS_LABELS } from '../models/person.model';
 import { Button } from './ui/button';
 import { Checkbox } from './ui/checkbox';
+import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { Card } from './ui/card';
@@ -11,9 +12,17 @@ interface FilterPanelProps {
   selectedEstados: PersonStatus[];
   estadosMode: 'any' | 'all';
   carnetFilter: CarnetFilter;
+  visitPresence: 'all' | 'with' | 'without';
+  visitNumber: string;
+  visitDateFrom: string;
+  visitDateTo: string;
   onEstadosChange: (estados: PersonStatus[]) => void;
   onEstadosModeChange: (mode: 'any' | 'all') => void;
   onCarnetFilterChange: (filter: CarnetFilter) => void;
+  onVisitPresenceChange: (filter: 'all' | 'with' | 'without') => void;
+  onVisitNumberChange: (visitNumber: string) => void;
+  onVisitDateFromChange: (date: string) => void;
+  onVisitDateToChange: (date: string) => void;
   onClearFilters: () => void;
 }
 
@@ -27,13 +36,33 @@ const allEstados: PersonStatus[] = [
   'finado'
 ];
 
+const toDateInputValue = (date: Date) => {
+  const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+  return local.toISOString().slice(0, 10);
+};
+
+const getWeekStart = () => {
+  const today = new Date();
+  const day = today.getDay() || 7;
+  today.setDate(today.getDate() - day + 1);
+  return today;
+};
+
 export function FilterPanel({
   selectedEstados,
   estadosMode,
   carnetFilter,
+  visitPresence,
+  visitNumber,
+  visitDateFrom,
+  visitDateTo,
   onEstadosChange,
   onEstadosModeChange,
   onCarnetFilterChange,
+  onVisitPresenceChange,
+  onVisitNumberChange,
+  onVisitDateFromChange,
+  onVisitDateToChange,
   onClearFilters
 }: FilterPanelProps) {
   const handleEstadoToggle = (estado: PersonStatus) => {
@@ -51,7 +80,7 @@ export function FilterPanel({
           <Filter className="h-4 w-4 text-gray-600" />
           <span>Filtros</span>
         </div>
-        {(selectedEstados.length > 0 || carnetFilter !== 'all') && (
+        {(selectedEstados.length > 0 || carnetFilter !== 'all' || visitPresence !== 'all' || visitNumber || visitDateFrom || visitDateTo) && (
           <Button
             variant="ghost"
             size="sm"
@@ -128,6 +157,91 @@ export function FilterPanel({
           </RadioGroup>
         </div>
       )}
+
+      <div className="space-y-3 border-t pt-3">
+        <Label>Visitas</Label>
+        <RadioGroup value={visitPresence} onValueChange={(value) => onVisitPresenceChange(value as 'all' | 'with' | 'without')}>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="all" id="visit-all" />
+            <Label htmlFor="visit-all" className="text-sm cursor-pointer">
+              Todas
+            </Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="with" id="visit-with" />
+            <Label htmlFor="visit-with" className="text-sm cursor-pointer">
+              Con visita
+            </Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="without" id="visit-without" />
+            <Label htmlFor="visit-without" className="text-sm cursor-pointer">
+              Sin visita
+            </Label>
+          </div>
+        </RadioGroup>
+
+        <div className="space-y-2">
+          <Label htmlFor="visit-number">Numero de visita exacto</Label>
+          <Input
+            id="visit-number"
+            type="number"
+            min={0}
+            value={visitNumber}
+            onChange={(event) => onVisitNumberChange(event.target.value)}
+            placeholder="Ej. 1, 2, 3"
+          />
+        </div>
+      </div>
+
+      <div className="space-y-3 border-t pt-3">
+        <Label>Fecha de visita</Label>
+        <div className="grid grid-cols-2 gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="h-10"
+            onClick={() => {
+              const today = toDateInputValue(new Date());
+              onVisitDateFromChange(today);
+              onVisitDateToChange(today);
+            }}
+          >
+            Hoy
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="h-10"
+            onClick={() => {
+              onVisitDateFromChange(toDateInputValue(getWeekStart()));
+              onVisitDateToChange(toDateInputValue(new Date()));
+            }}
+          >
+            Semana
+          </Button>
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="visit-date-from" className="text-xs text-muted-foreground">Desde</Label>
+          <Input
+            id="visit-date-from"
+            type="date"
+            value={visitDateFrom}
+            onChange={(event) => onVisitDateFromChange(event.target.value)}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="visit-date-to" className="text-xs text-muted-foreground">Hasta</Label>
+          <Input
+            id="visit-date-to"
+            type="date"
+            value={visitDateTo}
+            onChange={(event) => onVisitDateToChange(event.target.value)}
+          />
+        </div>
+      </div>
     </Card>
   );
 }

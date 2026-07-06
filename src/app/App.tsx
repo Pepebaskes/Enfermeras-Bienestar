@@ -28,10 +28,43 @@ import {
 import { Profile } from './models/profile.model';
 import { Toaster } from './components/ui/sonner';
 import { Button } from './components/ui/button';
-import { LogOut } from 'lucide-react';
+import { AlertTriangle, LogOut } from 'lucide-react';
+import { supabaseConfigError } from './services/supabaseClient';
 import { toast } from 'sonner';
 
+function MissingSupabaseConfigPage() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4">
+      <div className="w-full max-w-xl rounded-lg border border-amber-200 bg-white p-6 shadow-lg">
+        <div className="flex items-start gap-4">
+          <div className="rounded-lg bg-amber-100 p-3 text-amber-700">
+            <AlertTriangle className="size-7" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-semibold text-slate-950">Falta configurar Supabase</h1>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              Agrega las variables de entorno en Vercel y vuelve a desplegar el proyecto.
+            </p>
+          </div>
+        </div>
+        <div className="mt-5 rounded-md bg-slate-50 p-4 font-mono text-sm text-slate-800">
+          <p>VITE_SUPABASE_URL=https://tu-proyecto.supabase.co</p>
+          <p>VITE_SUPABASE_ANON_KEY=tu_publishable_key</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
+  if (supabaseConfigError) {
+    return <MissingSupabaseConfigPage />;
+  }
+
+  return <AppShell />;
+}
+
+function AppShell() {
   const [persons, setPersons] = useState<Person[]>([]);
   const [patientTotal, setPatientTotal] = useState(0);
   const [patientStats, setPatientStats] = useState<PatientStats | null>(null);

@@ -4,7 +4,7 @@ import { PatientStats } from '../services/patientService';
 import { DashboardCards } from '../components/DashboardCards';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
-import { Plus, Search, Download, Upload, List } from 'lucide-react';
+import { CalendarDays, Plus, Search, Download, Upload, List } from 'lucide-react';
 import { StatusTags } from '../components/StatusTags';
 import { ImportCSV } from '../components/ImportCSV';
 
@@ -90,6 +90,10 @@ export function DashboardPage({ persons, stats, onImportCSV, onExportCSV }: Dash
                     <p className="font-medium">{person.nombreCompleto}</p>
                     <p className="text-sm text-gray-600">
                       {person.calle} {person.numeroCasa}, {person.colonia}
+                    </p>
+                    <p className="mt-1 flex items-center gap-1.5 text-sm text-slate-600">
+                      <CalendarDays className="size-4 text-emerald-700" />
+                      Fecha visita: {person.fechaVisita ? new Date(person.fechaVisita).toLocaleDateString('es-MX') : 'Sin fecha'}
                     </p>
                     <StatusTags estados={person.estados} className="mt-1.5" />
                   </div>
