@@ -1,12 +1,14 @@
 import { useState } from 'react';
-import { Person, PersonStatus, STATUS_LABELS } from '../models/person.model';
+import { Person, PersonSex, PersonStatus, STATUS_LABELS } from '../models/person.model';
 import { validatePersonForm } from '../utils/validators';
+import { calculateImc } from '../utils/imc';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 import { Checkbox } from './ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
 interface PersonFormProps {
   person?: Person;
@@ -75,10 +77,12 @@ const numberFields = [
   'saturacion',
   'pruebasHorasAyuno',
   'lancetasUsadas',
-  'tirasUsadas',
   'glucosaResultado',
+  'glucosaTirasUsadas',
   'trigliceridosResultado',
+  'trigliceridosTirasUsadas',
   'colesterolResultado',
+  'colesterolTirasUsadas',
   'pantorrillaCm',
   'brazoCm',
   'cinturaCm'
@@ -86,7 +90,9 @@ const numberFields = [
 
 const countFields = [
   'lancetasUsadas',
-  'tirasUsadas'
+  'glucosaTirasUsadas',
+  'trigliceridosTirasUsadas',
+  'colesterolTirasUsadas'
 ] as const;
 
 const vitalSignsFields = [
@@ -97,7 +103,7 @@ const vitalSignsFields = [
   { field: 'escalaGlasgow', label: 'Escala Glasgow' },
   { field: 'frecuenciaCardiaca', label: 'Frecuencia cardiaca' },
   { field: 'peso', label: 'Peso' },
-  { field: 'talla', label: 'Talla' },
+  { field: 'talla', label: 'Talla / altura' },
   { field: 'saturacion', label: 'Saturacion' }
 ] as const;
 
@@ -121,6 +127,7 @@ export function PersonForm({ person, responsibleName, onSave, onCancel, isSaving
     numeroVisita: person?.numeroVisita ?? 0,
     fechaVisita: person?.fechaVisita || getTodayDate(),
     edad: inputValue(person?.edad),
+    sexo: person?.sexo ?? '',
     pamOPcd: person?.pamOPcd ?? '',
     enfermedades: person?.enfermedades ?? '',
     exploracionFisica: person?.exploracionFisica ?? '',
@@ -139,10 +146,12 @@ export function PersonForm({ person, responsibleName, onSave, onCancel, isSaving
     pruebasHorasAyuno: inputValue(person?.pruebasHorasAyuno),
     pruebasFechaHoraMuestra: toDateTimeLocalInput(person?.pruebasFechaHoraMuestra),
     lancetasUsadas: inputValue(person?.lancetasUsadas),
-    tirasUsadas: inputValue(person?.tirasUsadas),
     glucosaResultado: inputValue(person?.glucosaResultado),
+    glucosaTirasUsadas: inputValue(person?.glucosaTirasUsadas),
     trigliceridosResultado: inputValue(person?.trigliceridosResultado),
+    trigliceridosTirasUsadas: inputValue(person?.trigliceridosTirasUsadas),
     colesterolResultado: inputValue(person?.colesterolResultado),
+    colesterolTirasUsadas: inputValue(person?.colesterolTirasUsadas),
     pantorrillaCm: inputValue(person?.pantorrillaCm),
     brazoCm: inputValue(person?.brazoCm),
     cinturaCm: inputValue(person?.cinturaCm),
@@ -151,6 +160,11 @@ export function PersonForm({ person, responsibleName, onSave, onCancel, isSaving
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const currentImc = calculateImc(
+    parseOptionalNumber(String(formData.peso)),
+    parseOptionalNumber(String(formData.talla)),
+    parseOptionalNumber(String(formData.edad))
+  );
 
   const handleChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -235,6 +249,7 @@ export function PersonForm({ person, responsibleName, onSave, onCancel, isSaving
       fechaVisita: formData.fechaVisita || undefined,
       enfermera: responsibleName,
       edad: parseOptionalNumber(String(formData.edad)),
+      sexo: formData.sexo ? formData.sexo as PersonSex : undefined,
       pamOPcd: formData.pamOPcd ? toUpperValue(String(formData.pamOPcd)) : undefined,
       enfermedades: formData.enfermedades ? toUpperValue(String(formData.enfermedades)) : undefined,
       exploracionFisica: formData.exploracionFisica ? toUpperValue(String(formData.exploracionFisica)) : undefined,
@@ -253,10 +268,12 @@ export function PersonForm({ person, responsibleName, onSave, onCancel, isSaving
       pruebasHorasAyuno: parseOptionalNumber(String(formData.pruebasHorasAyuno)),
       pruebasFechaHoraMuestra: formData.pruebasFechaHoraMuestra || undefined,
       lancetasUsadas: parseOptionalInteger(String(formData.lancetasUsadas)),
-      tirasUsadas: parseOptionalInteger(String(formData.tirasUsadas)),
       glucosaResultado: parseOptionalNumber(String(formData.glucosaResultado)),
+      glucosaTirasUsadas: parseOptionalInteger(String(formData.glucosaTirasUsadas)),
       trigliceridosResultado: parseOptionalNumber(String(formData.trigliceridosResultado)),
+      trigliceridosTirasUsadas: parseOptionalInteger(String(formData.trigliceridosTirasUsadas)),
       colesterolResultado: parseOptionalNumber(String(formData.colesterolResultado)),
+      colesterolTirasUsadas: parseOptionalInteger(String(formData.colesterolTirasUsadas)),
       pantorrillaCm: parseOptionalNumber(String(formData.pantorrillaCm)),
       brazoCm: parseOptionalNumber(String(formData.brazoCm)),
       cinturaCm: parseOptionalNumber(String(formData.cinturaCm)),
@@ -285,6 +302,26 @@ export function PersonForm({ person, responsibleName, onSave, onCancel, isSaving
       {errors[String(field)] && (
         <p className="text-sm leading-5 text-red-500">{errors[String(field)]}</p>
       )}
+    </div>
+  );
+
+  const renderSexSelect = () => (
+    <div className="min-w-0 space-y-2">
+      <Label htmlFor="sexo" className="block text-sm leading-5 text-foreground">Sexo</Label>
+      <Select
+        value={formData.sexo || 'sin_registro'}
+        onValueChange={(value) => handleChange('sexo', value === 'sin_registro' ? '' : value)}
+      >
+        <SelectTrigger id="sexo" className="min-h-12 border-sky-200 bg-sky-50/80 py-3 text-base shadow-sm focus-visible:border-sky-500">
+          <SelectValue placeholder="Selecciona sexo" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="sin_registro">Sin registro</SelectItem>
+          <SelectItem value="femenino">Femenino</SelectItem>
+          <SelectItem value="masculino">Masculino</SelectItem>
+          <SelectItem value="otro">Otro</SelectItem>
+        </SelectContent>
+      </Select>
     </div>
   );
 
@@ -571,6 +608,7 @@ export function PersonForm({ person, responsibleName, onSave, onCancel, isSaving
         <CardContent className="space-y-5 px-4 pb-4 sm:px-6 sm:pb-6">
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             {renderNumberInput('edad', 'Edad')}
+            {renderSexSelect()}
             {renderTextInput('pamOPcd', 'PAM o PCD')}
             {renderTextInput('grupoRiesgo', 'Grupo de riesgo')}
           </div>
@@ -588,6 +626,23 @@ export function PersonForm({ person, responsibleName, onSave, onCancel, isSaving
               {renderNumberInput(item.field, item.label)}
             </div>
           ))}
+          <div className="rounded-md border border-emerald-200 bg-emerald-50 p-4 sm:col-span-2 lg:col-span-3">
+            <p className="text-sm font-medium text-emerald-900">IMC</p>
+            {currentImc ? (
+              <div className="mt-2 space-y-1">
+                <p className="text-2xl font-semibold text-emerald-950">{currentImc.formattedValue}</p>
+                <p className="text-sm text-emerald-900">{currentImc.label}</p>
+                {currentImc.note && (
+                  <p className="text-xs leading-5 text-emerald-800">{currentImc.note}</p>
+                )}
+              </div>
+            ) : (
+              <p className="mt-2 text-sm text-emerald-900">Ingresa peso y talla para calcularlo.</p>
+            )}
+            <p className="mt-2 text-xs leading-5 text-emerald-800">
+              Se calcula automaticamente con peso y talla.
+            </p>
+          </div>
         </CardContent>
       </Card>
 
@@ -620,27 +675,29 @@ export function PersonForm({ person, responsibleName, onSave, onCancel, isSaving
               />
             </div>
             {renderCountInput('lancetasUsadas', 'Lancetas usadas')}
-            {renderCountInput('tirasUsadas', 'Tiras usadas')}
           </div>
 
           <div className="space-y-3 rounded-md border bg-muted/20 p-3">
             <p className="text-sm font-medium">Glucosa</p>
-            <div className="grid grid-cols-1 gap-5">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               {renderNumberInput('glucosaResultado', 'Resultado')}
+              {renderCountInput('glucosaTirasUsadas', 'Tiras usadas')}
             </div>
           </div>
 
           <div className="space-y-3 rounded-md border bg-muted/20 p-3">
             <p className="text-sm font-medium">Trigliceridos</p>
-            <div className="grid grid-cols-1 gap-5">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               {renderNumberInput('trigliceridosResultado', 'Resultado')}
+              {renderCountInput('trigliceridosTirasUsadas', 'Tiras usadas')}
             </div>
           </div>
 
           <div className="space-y-3 rounded-md border bg-muted/20 p-3">
             <p className="text-sm font-medium">Colesterol</p>
-            <div className="grid grid-cols-1 gap-5">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               {renderNumberInput('colesterolResultado', 'Resultado')}
+              {renderCountInput('colesterolTirasUsadas', 'Tiras usadas')}
             </div>
           </div>
         </CardContent>

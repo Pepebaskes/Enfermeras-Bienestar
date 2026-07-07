@@ -1,6 +1,7 @@
 import { Person, PersonStatus } from '../models/person.model';
 import { Profile } from '../models/profile.model';
 import { Subscription } from '../models/subscription.model';
+import { calculateImc } from '../utils/imc';
 
 const parseBooleanValue = (value: string): boolean => {
   const normalized = value.trim().toLowerCase();
@@ -99,6 +100,7 @@ export const exportToCSV = (persons: Person[]): string => {
     'Fecha de Visita',
     'Enfermera',
     'Edad',
+    'Sexo',
     'PAM o PCD',
     'Enfermedades',
     'Exploracion Fisica',
@@ -112,15 +114,19 @@ export const exportToCSV = (persons: Person[]): string => {
     'Grupo Riesgo',
     'Frecuencia Cardiaca',
     'Peso',
-    'Talla',
+    'Talla / Altura',
+    'IMC',
+    'Clasificacion IMC',
     'Saturacion',
     'Pruebas Horas Ayuno',
     'Pruebas Fecha Hora Muestra',
     'Lancetas Usadas',
-    'Tiras Usadas',
     'Glucosa Resultado',
+    'Glucosa Tiras Usadas',
     'Trigliceridos Resultado',
+    'Trigliceridos Tiras Usadas',
     'Colesterol Resultado',
+    'Colesterol Tiras Usadas',
     'Pantorrilla cm',
     'Brazo cm',
     'Cintura cm',
@@ -134,6 +140,7 @@ export const exportToCSV = (persons: Person[]): string => {
 
   const rows = persons.map(person => {
     const estados = person.estados.join('; ');
+    const imc = calculateImc(person.peso, person.talla, person.edad);
     return [
       escapeCSVValue(person.nombreCompleto),
       escapeCSVValue(person.calle),
@@ -148,6 +155,7 @@ export const exportToCSV = (persons: Person[]): string => {
       escapeCSVValue(person.fechaVisita || ''),
       escapeCSVValue(person.enfermera || ''),
       escapeCSVValue(person.edad?.toString() || ''),
+      escapeCSVValue(person.sexo || ''),
       escapeCSVValue(person.pamOPcd || ''),
       escapeCSVValue(person.enfermedades || ''),
       escapeCSVValue(person.exploracionFisica || ''),
@@ -162,14 +170,18 @@ export const exportToCSV = (persons: Person[]): string => {
       escapeCSVValue(person.frecuenciaCardiaca?.toString() || ''),
       escapeCSVValue(person.peso?.toString() || ''),
       escapeCSVValue(person.talla?.toString() || ''),
+      escapeCSVValue(imc?.formattedValue || ''),
+      escapeCSVValue(imc?.label || ''),
       escapeCSVValue(person.saturacion?.toString() || ''),
       escapeCSVValue(person.pruebasHorasAyuno?.toString() || ''),
       escapeCSVValue(person.pruebasFechaHoraMuestra || ''),
       escapeCSVValue(person.lancetasUsadas?.toString() || ''),
-      escapeCSVValue(person.tirasUsadas?.toString() || ''),
       escapeCSVValue(person.glucosaResultado?.toString() || ''),
+      escapeCSVValue(person.glucosaTirasUsadas?.toString() || ''),
       escapeCSVValue(person.trigliceridosResultado?.toString() || ''),
+      escapeCSVValue(person.trigliceridosTirasUsadas?.toString() || ''),
       escapeCSVValue(person.colesterolResultado?.toString() || ''),
+      escapeCSVValue(person.colesterolTirasUsadas?.toString() || ''),
       escapeCSVValue(person.pantorrillaCm?.toString() || ''),
       escapeCSVValue(person.brazoCm?.toString() || ''),
       escapeCSVValue(person.cinturaCm?.toString() || ''),

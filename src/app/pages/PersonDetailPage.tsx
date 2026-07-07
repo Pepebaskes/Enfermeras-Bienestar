@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { ArrowLeft, Edit, MapPin, Phone, Calendar, FileText, Clock, PlusCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { fetchPatientById } from '../services/patientService';
+import { calculateImc } from '../utils/imc';
 
 interface PersonDetailPageProps {
   persons: Person[];
@@ -82,9 +83,16 @@ export function PersonDetailPage({ persons, onRegisterNextVisit }: PersonDetailP
 
   const currentVisitNumber = person.numeroVisita || 0;
   const nextVisitNumber = currentVisitNumber + 1;
+  const imc = calculateImc(person.peso, person.talla, person.edad);
+  const sexLabelByValue: Record<string, string> = {
+    femenino: 'Femenino',
+    masculino: 'Masculino',
+    otro: 'Otro'
+  };
   const hasValue = (value: unknown) => value !== undefined && value !== null && value !== '';
   const hasHealthData = [
     person.edad,
+    person.sexo,
     person.pamOPcd,
     person.enfermedades,
     person.exploracionFisica,
@@ -103,10 +111,12 @@ export function PersonDetailPage({ persons, onRegisterNextVisit }: PersonDetailP
     person.pruebasHorasAyuno,
     person.pruebasFechaHoraMuestra,
     person.lancetasUsadas,
-    person.tirasUsadas,
     person.glucosaResultado,
+    person.glucosaTirasUsadas,
     person.trigliceridosResultado,
+    person.trigliceridosTirasUsadas,
     person.colesterolResultado,
+    person.colesterolTirasUsadas,
     person.pantorrillaCm,
     person.brazoCm,
     person.cinturaCm,
@@ -286,13 +296,14 @@ Teléfono: ${person.telefono || 'No disponible'}
         </Card>
       )}
 
-      {(hasValue(person.edad) || hasValue(person.pamOPcd) || hasValue(person.grupoRiesgo) || hasValue(person.enfermedades)) && (
+      {(hasValue(person.edad) || hasValue(person.sexo) || hasValue(person.pamOPcd) || hasValue(person.grupoRiesgo) || hasValue(person.enfermedades)) && (
         <Card>
           <CardHeader>
             <CardTitle>Datos generales Salud Casa por Casa</CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {renderField('Edad', person.edad)}
+            {renderField('Sexo', person.sexo ? sexLabelByValue[person.sexo] || person.sexo : undefined)}
             {renderField('PAM o PCD', person.pamOPcd)}
             {renderField('Grupo de riesgo', person.grupoRiesgo)}
             <div className="sm:col-span-2">{renderField('Enfermedades', person.enfermedades)}</div>
@@ -300,7 +311,7 @@ Teléfono: ${person.telefono || 'No disponible'}
         </Card>
       )}
 
-      {(hasValue(person.taSistolica) || hasValue(person.taDiastolica) || hasValue(person.frecuenciaRespiratoria) || hasValue(person.temperatura) || hasValue(person.escalaGlasgow) || hasValue(person.frecuenciaCardiaca) || hasValue(person.peso) || hasValue(person.talla) || hasValue(person.saturacion)) && (
+      {(hasValue(person.taSistolica) || hasValue(person.taDiastolica) || hasValue(person.frecuenciaRespiratoria) || hasValue(person.temperatura) || hasValue(person.escalaGlasgow) || hasValue(person.frecuenciaCardiaca) || hasValue(person.peso) || hasValue(person.talla) || hasValue(person.saturacion) || Boolean(imc)) && (
         <Card>
           <CardHeader>
             <CardTitle>Signos vitales</CardTitle>
@@ -313,8 +324,18 @@ Teléfono: ${person.telefono || 'No disponible'}
             {renderField('Escala Glasgow', person.escalaGlasgow)}
             {renderField('Frecuencia cardiaca', person.frecuenciaCardiaca)}
             {renderField('Peso', person.peso)}
-            {renderField('Talla', person.talla)}
+            {renderField('Talla / altura', person.talla)}
             {renderField('Saturacion', person.saturacion)}
+            {imc && (
+              <div className="rounded-md border border-emerald-200 bg-emerald-50 p-3 sm:col-span-3">
+                <span className="text-sm text-emerald-900">IMC:</span>
+                <p className="text-xl font-semibold text-emerald-950">{imc.formattedValue}</p>
+                <p className="text-sm text-emerald-900">{imc.label}</p>
+                {imc.note && (
+                  <p className="text-xs leading-5 text-emerald-800">{imc.note}</p>
+                )}
+              </div>
+            )}
           </CardContent>
         </Card>
       )}
@@ -332,7 +353,7 @@ Teléfono: ${person.telefono || 'No disponible'}
         </Card>
       )}
 
-      {(hasValue(person.pruebasHorasAyuno) || hasValue(person.pruebasFechaHoraMuestra) || hasValue(person.lancetasUsadas) || hasValue(person.tirasUsadas) || hasValue(person.glucosaResultado) || hasValue(person.trigliceridosResultado) || hasValue(person.colesterolResultado)) && (
+      {(hasValue(person.pruebasHorasAyuno) || hasValue(person.pruebasFechaHoraMuestra) || hasValue(person.lancetasUsadas) || hasValue(person.glucosaResultado) || hasValue(person.glucosaTirasUsadas) || hasValue(person.trigliceridosResultado) || hasValue(person.trigliceridosTirasUsadas) || hasValue(person.colesterolResultado) || hasValue(person.colesterolTirasUsadas)) && (
         <Card>
           <CardHeader>
             <CardTitle>Pruebas medicas</CardTitle>
@@ -342,16 +363,18 @@ Teléfono: ${person.telefono || 'No disponible'}
               {renderField('Horas de ayuno', person.pruebasHorasAyuno)}
               {renderDateTimeField('Fecha y hora de muestra', person.pruebasFechaHoraMuestra)}
               {renderField('Lancetas usadas', person.lancetasUsadas)}
-              {renderField('Tiras usadas', person.tirasUsadas)}
             </div>
-            <div className="grid grid-cols-1 gap-3 rounded-md border p-3 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-3 rounded-md border p-3 sm:grid-cols-2">
               {renderField('Glucosa resultado', person.glucosaResultado)}
+              {renderField('Tiras usadas', person.glucosaTirasUsadas)}
             </div>
-            <div className="grid grid-cols-1 gap-3 rounded-md border p-3 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-3 rounded-md border p-3 sm:grid-cols-2">
               {renderField('Trigliceridos resultado', person.trigliceridosResultado)}
+              {renderField('Tiras usadas', person.trigliceridosTirasUsadas)}
             </div>
-            <div className="grid grid-cols-1 gap-3 rounded-md border p-3 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-3 rounded-md border p-3 sm:grid-cols-2">
               {renderField('Colesterol resultado', person.colesterolResultado)}
+              {renderField('Tiras usadas', person.colesterolTirasUsadas)}
             </div>
           </CardContent>
         </Card>

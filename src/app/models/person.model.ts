@@ -7,6 +7,8 @@ export type PersonStatus =
   | 'cambio_domicilio'
   | 'finado';
 
+export type PersonSex = 'femenino' | 'masculino' | 'otro';
+
 export const STATUS_LABELS: Record<PersonStatus, string> = {
   visitado: 'Visitado',
   fuera_del_pais: 'Fuera del pais',
@@ -46,6 +48,7 @@ export interface Person {
   actualizadoPorId?: string;
   actualizadoPorNombre?: string;
   edad?: number;
+  sexo?: PersonSex;
   pamOPcd?: string;
   enfermedades?: string;
   exploracionFisica?: string;
@@ -64,10 +67,12 @@ export interface Person {
   pruebasHorasAyuno?: number;
   pruebasFechaHoraMuestra?: string;
   lancetasUsadas?: number;
-  tirasUsadas?: number;
   glucosaResultado?: number;
+  glucosaTirasUsadas?: number;
   trigliceridosResultado?: number;
+  trigliceridosTirasUsadas?: number;
   colesterolResultado?: number;
+  colesterolTirasUsadas?: number;
   pantorrillaCm?: number;
   brazoCm?: number;
   cinturaCm?: number;
@@ -91,6 +96,7 @@ export interface PersonFormData {
   fechaVisita: string;
   enfermera: string;
   edad: string;
+  sexo: string;
   pamOPcd: string;
   enfermedades: string;
   exploracionFisica: string;
@@ -109,10 +115,12 @@ export interface PersonFormData {
   pruebasHorasAyuno: string;
   pruebasFechaHoraMuestra: string;
   lancetasUsadas: string;
-  tirasUsadas: string;
   glucosaResultado: string;
+  glucosaTirasUsadas: string;
   trigliceridosResultado: string;
+  trigliceridosTirasUsadas: string;
   colesterolResultado: string;
+  colesterolTirasUsadas: string;
   pantorrillaCm: string;
   brazoCm: string;
   cinturaCm: string;

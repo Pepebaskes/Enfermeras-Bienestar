@@ -5,6 +5,7 @@ begin;
 
 alter table public.patients
   add column if not exists edad numeric,
+  add column if not exists sexo text,
   add column if not exists pam_o_pcd text,
   add column if not exists enfermedades text,
   add column if not exists exploracion_fisica text,
@@ -23,10 +24,12 @@ alter table public.patients
   add column if not exists pruebas_horas_ayuno numeric,
   add column if not exists pruebas_fecha_hora_muestra timestamptz,
   add column if not exists lancetas_usadas integer,
-  add column if not exists tiras_usadas integer,
   add column if not exists glucosa_resultado numeric,
+  add column if not exists glucosa_tiras_usadas integer,
   add column if not exists trigliceridos_resultado numeric,
+  add column if not exists trigliceridos_tiras_usadas integer,
   add column if not exists colesterol_resultado numeric,
+  add column if not exists colesterol_tiras_usadas integer,
   add column if not exists pantorrilla_cm numeric,
   add column if not exists brazo_cm numeric,
   add column if not exists cintura_cm numeric,

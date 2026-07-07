@@ -8,6 +8,7 @@ where table_schema = 'public'
   and table_name = 'patients'
   and column_name in (
     'edad',
+    'sexo',
     'pam_o_pcd',
     'enfermedades',
     'exploracion_fisica',
@@ -26,10 +27,12 @@ where table_schema = 'public'
     'pruebas_horas_ayuno',
     'pruebas_fecha_hora_muestra',
     'lancetas_usadas',
-    'tiras_usadas',
     'glucosa_resultado',
+    'glucosa_tiras_usadas',
     'trigliceridos_resultado',
+    'trigliceridos_tiras_usadas',
     'colesterol_resultado',
+    'colesterol_tiras_usadas',
     'pantorrilla_cm',
     'brazo_cm',
     'cintura_cm',
@@ -44,6 +47,7 @@ select
   id,
   nombre_completo,
   edad,
+  sexo,
   pam_o_pcd,
   enfermedades,
   ta_sistolica,
@@ -59,10 +63,12 @@ select
   pruebas_horas_ayuno,
   pruebas_fecha_hora_muestra,
   lancetas_usadas,
-  tiras_usadas,
   glucosa_resultado,
+  glucosa_tiras_usadas,
   trigliceridos_resultado,
+  trigliceridos_tiras_usadas,
   colesterol_resultado,
+  colesterol_tiras_usadas,
   pantorrilla_cm,
   brazo_cm,
   cintura_cm,
@@ -80,15 +86,18 @@ select
   id,
   nombre_completo,
   edad,
+  sexo,
   ta_sistolica,
   ta_diastolica,
   pruebas_horas_ayuno,
   pruebas_fecha_hora_muestra,
   lancetas_usadas,
-  tiras_usadas,
   glucosa_resultado,
+  glucosa_tiras_usadas,
   trigliceridos_resultado,
+  trigliceridos_tiras_usadas,
   colesterol_resultado,
+  colesterol_tiras_usadas,
   peso,
   talla,
   pantorrilla_cm,
@@ -97,6 +106,7 @@ select
   actualizado_en
 from public.patients
 where edad is not null
+  or sexo is not null
   or pam_o_pcd is not null
   or enfermedades is not null
   or exploracion_fisica is not null
@@ -115,10 +125,12 @@ where edad is not null
   or pruebas_horas_ayuno is not null
   or pruebas_fecha_hora_muestra is not null
   or lancetas_usadas is not null
-  or tiras_usadas is not null
   or glucosa_resultado is not null
+  or glucosa_tiras_usadas is not null
   or trigliceridos_resultado is not null
+  or trigliceridos_tiras_usadas is not null
   or colesterol_resultado is not null
+  or colesterol_tiras_usadas is not null
   or pantorrilla_cm is not null
   or brazo_cm is not null
   or cintura_cm is not null

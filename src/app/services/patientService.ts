@@ -1,4 +1,4 @@
-import { Person, PersonStatus } from '../models/person.model';
+import { Person, PersonSex, PersonStatus } from '../models/person.model';
 import { Profile } from '../models/profile.model';
 import { CarnetFilter, SearchMode, SearchType } from '../utils/filters';
 import { SortField, SortOrder } from '../utils/sorters';
@@ -24,6 +24,7 @@ interface PatientRow {
   updated_by: string | null;
   updated_by_name: string | null;
   edad: number | null;
+  sexo: PersonSex | null;
   pam_o_pcd: string | null;
   enfermedades: string | null;
   exploracion_fisica: string | null;
@@ -42,10 +43,12 @@ interface PatientRow {
   pruebas_horas_ayuno: number | null;
   pruebas_fecha_hora_muestra: string | null;
   lancetas_usadas: number | null;
-  tiras_usadas: number | null;
   glucosa_resultado: number | null;
+  glucosa_tiras_usadas: number | null;
   trigliceridos_resultado: number | null;
+  trigliceridos_tiras_usadas: number | null;
   colesterol_resultado: number | null;
+  colesterol_tiras_usadas: number | null;
   pantorrilla_cm: number | null;
   brazo_cm: number | null;
   cintura_cm: number | null;
@@ -136,6 +139,7 @@ const mapPatientRowToPerson = (row: PatientRow): Person => ({
   actualizadoPorId: row.updated_by || undefined,
   actualizadoPorNombre: row.updated_by_name || undefined,
   edad: row.edad ?? undefined,
+  sexo: row.sexo ?? undefined,
   pamOPcd: row.pam_o_pcd ?? undefined,
   enfermedades: row.enfermedades ?? undefined,
   exploracionFisica: row.exploracion_fisica ?? undefined,
@@ -154,10 +158,12 @@ const mapPatientRowToPerson = (row: PatientRow): Person => ({
   pruebasHorasAyuno: row.pruebas_horas_ayuno ?? undefined,
   pruebasFechaHoraMuestra: row.pruebas_fecha_hora_muestra ?? undefined,
   lancetasUsadas: row.lancetas_usadas ?? undefined,
-  tirasUsadas: row.tiras_usadas ?? undefined,
   glucosaResultado: row.glucosa_resultado ?? undefined,
+  glucosaTirasUsadas: row.glucosa_tiras_usadas ?? undefined,
   trigliceridosResultado: row.trigliceridos_resultado ?? undefined,
+  trigliceridosTirasUsadas: row.trigliceridos_tiras_usadas ?? undefined,
   colesterolResultado: row.colesterol_resultado ?? undefined,
+  colesterolTirasUsadas: row.colesterol_tiras_usadas ?? undefined,
   pantorrillaCm: row.pantorrilla_cm ?? undefined,
   brazoCm: row.brazo_cm ?? undefined,
   cinturaCm: row.cintura_cm ?? undefined,
@@ -181,6 +187,7 @@ const mapPersonToPatientBase = (person: Person, profile: Profile) => ({
   fecha_visita: toDateValue(person.fechaVisita),
   enfermera: profile.nombre,
   edad: nullableNumber(person.edad),
+  sexo: nullableString(person.sexo),
   pam_o_pcd: nullableString(person.pamOPcd),
   enfermedades: nullableString(person.enfermedades),
   exploracion_fisica: nullableString(person.exploracionFisica),
@@ -199,10 +206,12 @@ const mapPersonToPatientBase = (person: Person, profile: Profile) => ({
   pruebas_horas_ayuno: nullableNumber(person.pruebasHorasAyuno),
   pruebas_fecha_hora_muestra: person.pruebasFechaHoraMuestra || null,
   lancetas_usadas: nullableNumber(person.lancetasUsadas),
-  tiras_usadas: nullableNumber(person.tirasUsadas),
   glucosa_resultado: nullableNumber(person.glucosaResultado),
+  glucosa_tiras_usadas: nullableNumber(person.glucosaTirasUsadas),
   trigliceridos_resultado: nullableNumber(person.trigliceridosResultado),
+  trigliceridos_tiras_usadas: nullableNumber(person.trigliceridosTirasUsadas),
   colesterol_resultado: nullableNumber(person.colesterolResultado),
+  colesterol_tiras_usadas: nullableNumber(person.colesterolTirasUsadas),
   pantorrilla_cm: nullableNumber(person.pantorrillaCm),
   brazo_cm: nullableNumber(person.brazoCm),
   cintura_cm: nullableNumber(person.cinturaCm),
@@ -254,6 +263,7 @@ const isHealthSchemaCacheError = (message: string) => {
   return normalizedMessage.includes('schema cache')
     && (
       normalizedMessage.includes('edad')
+      || normalizedMessage.includes('sexo')
       || normalizedMessage.includes('pam_o_pcd')
       || normalizedMessage.includes('enfermedades')
       || normalizedMessage.includes('exploracion_fisica')
@@ -263,10 +273,12 @@ const isHealthSchemaCacheError = (message: string) => {
       || normalizedMessage.includes('pruebas_horas_ayuno')
       || normalizedMessage.includes('pruebas_fecha_hora_muestra')
       || normalizedMessage.includes('lancetas_usadas')
-      || normalizedMessage.includes('tiras_usadas')
       || normalizedMessage.includes('glucosa_resultado')
+      || normalizedMessage.includes('glucosa_tiras_usadas')
       || normalizedMessage.includes('trigliceridos_resultado')
+      || normalizedMessage.includes('trigliceridos_tiras_usadas')
       || normalizedMessage.includes('colesterol_resultado')
+      || normalizedMessage.includes('colesterol_tiras_usadas')
       || normalizedMessage.includes('pantorrilla_cm')
       || normalizedMessage.includes('discapacidad')
     );
