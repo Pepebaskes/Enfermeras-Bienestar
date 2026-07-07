@@ -39,15 +39,13 @@ interface PatientRow {
   peso: number | null;
   talla: number | null;
   saturacion: number | null;
-  glucosa_horas_ayuno: number | null;
+  pruebas_horas_ayuno: number | null;
+  pruebas_fecha_hora_muestra: string | null;
+  lancetas_usadas: number | null;
+  tiras_usadas: number | null;
   glucosa_resultado: number | null;
-  glucosa_fecha_hora_muestra: string | null;
-  trigliceridos_horas_ayuno: number | null;
   trigliceridos_resultado: number | null;
-  trigliceridos_fecha_hora_muestra: string | null;
-  colesterol_horas_ayuno: number | null;
   colesterol_resultado: number | null;
-  colesterol_fecha_hora_muestra: string | null;
   pantorrilla_cm: number | null;
   brazo_cm: number | null;
   cintura_cm: number | null;
@@ -153,15 +151,13 @@ const mapPatientRowToPerson = (row: PatientRow): Person => ({
   peso: row.peso ?? undefined,
   talla: row.talla ?? undefined,
   saturacion: row.saturacion ?? undefined,
-  glucosaHorasAyuno: row.glucosa_horas_ayuno ?? undefined,
+  pruebasHorasAyuno: row.pruebas_horas_ayuno ?? undefined,
+  pruebasFechaHoraMuestra: row.pruebas_fecha_hora_muestra ?? undefined,
+  lancetasUsadas: row.lancetas_usadas ?? undefined,
+  tirasUsadas: row.tiras_usadas ?? undefined,
   glucosaResultado: row.glucosa_resultado ?? undefined,
-  glucosaFechaHoraMuestra: row.glucosa_fecha_hora_muestra ?? undefined,
-  trigliceridosHorasAyuno: row.trigliceridos_horas_ayuno ?? undefined,
   trigliceridosResultado: row.trigliceridos_resultado ?? undefined,
-  trigliceridosFechaHoraMuestra: row.trigliceridos_fecha_hora_muestra ?? undefined,
-  colesterolHorasAyuno: row.colesterol_horas_ayuno ?? undefined,
   colesterolResultado: row.colesterol_resultado ?? undefined,
-  colesterolFechaHoraMuestra: row.colesterol_fecha_hora_muestra ?? undefined,
   pantorrillaCm: row.pantorrilla_cm ?? undefined,
   brazoCm: row.brazo_cm ?? undefined,
   cinturaCm: row.cintura_cm ?? undefined,
@@ -200,15 +196,13 @@ const mapPersonToPatientBase = (person: Person, profile: Profile) => ({
   peso: nullableNumber(person.peso),
   talla: nullableNumber(person.talla),
   saturacion: nullableNumber(person.saturacion),
-  glucosa_horas_ayuno: nullableNumber(person.glucosaHorasAyuno),
+  pruebas_horas_ayuno: nullableNumber(person.pruebasHorasAyuno),
+  pruebas_fecha_hora_muestra: person.pruebasFechaHoraMuestra || null,
+  lancetas_usadas: nullableNumber(person.lancetasUsadas),
+  tiras_usadas: nullableNumber(person.tirasUsadas),
   glucosa_resultado: nullableNumber(person.glucosaResultado),
-  glucosa_fecha_hora_muestra: person.glucosaFechaHoraMuestra || null,
-  trigliceridos_horas_ayuno: nullableNumber(person.trigliceridosHorasAyuno),
   trigliceridos_resultado: nullableNumber(person.trigliceridosResultado),
-  trigliceridos_fecha_hora_muestra: person.trigliceridosFechaHoraMuestra || null,
-  colesterol_horas_ayuno: nullableNumber(person.colesterolHorasAyuno),
   colesterol_resultado: nullableNumber(person.colesterolResultado),
-  colesterol_fecha_hora_muestra: person.colesterolFechaHoraMuestra || null,
   pantorrilla_cm: nullableNumber(person.pantorrillaCm),
   brazo_cm: nullableNumber(person.brazoCm),
   cintura_cm: nullableNumber(person.cinturaCm),
@@ -232,49 +226,19 @@ const mapPersonToPatientUpdate = (person: Person, profile: Profile) => ({
   actualizado_en: new Date().toISOString()
 });
 
-const removeSchemaExtensionFields = <T extends Record<string, unknown>>(payload: T) => {
+const removeAuditFields = <T extends Record<string, unknown>>(payload: T) => {
   const {
     created_by,
     created_by_name,
     updated_by,
     updated_by_name,
-    edad,
-    pam_o_pcd,
-    enfermedades,
-    exploracion_fisica,
-    diagnostico,
-    tratamiento,
-    ta_sistolica,
-    ta_diastolica,
-    frecuencia_respiratoria,
-    temperatura,
-    escala_glasgow,
-    grupo_riesgo,
-    frecuencia_cardiaca,
-    peso,
-    talla,
-    saturacion,
-    glucosa_horas_ayuno,
-    glucosa_resultado,
-    glucosa_fecha_hora_muestra,
-    trigliceridos_horas_ayuno,
-    trigliceridos_resultado,
-    trigliceridos_fecha_hora_muestra,
-    colesterol_horas_ayuno,
-    colesterol_resultado,
-    colesterol_fecha_hora_muestra,
-    pantorrilla_cm,
-    brazo_cm,
-    cintura_cm,
-    discapacidad,
-    nota,
-    ...payloadWithoutAudit
+    ...payloadWithoutAuditFields
   } = payload;
 
-  return payloadWithoutAudit;
+  return payloadWithoutAuditFields;
 };
 
-const isExtensionSchemaCacheError = (message: string) => {
+const isAuditSchemaCacheError = (message: string) => {
   const normalizedMessage = message.toLowerCase();
   return normalizedMessage.includes('schema cache')
     && (
@@ -282,19 +246,34 @@ const isExtensionSchemaCacheError = (message: string) => {
       || normalizedMessage.includes('created_by_name')
       || normalizedMessage.includes('updated_by')
       || normalizedMessage.includes('updated_by_name')
-      || normalizedMessage.includes('edad')
+    );
+};
+
+const isHealthSchemaCacheError = (message: string) => {
+  const normalizedMessage = message.toLowerCase();
+  return normalizedMessage.includes('schema cache')
+    && (
+      normalizedMessage.includes('edad')
       || normalizedMessage.includes('pam_o_pcd')
       || normalizedMessage.includes('enfermedades')
       || normalizedMessage.includes('exploracion_fisica')
       || normalizedMessage.includes('diagnostico')
       || normalizedMessage.includes('tratamiento')
       || normalizedMessage.includes('ta_sistolica')
+      || normalizedMessage.includes('pruebas_horas_ayuno')
+      || normalizedMessage.includes('pruebas_fecha_hora_muestra')
+      || normalizedMessage.includes('lancetas_usadas')
+      || normalizedMessage.includes('tiras_usadas')
       || normalizedMessage.includes('glucosa_resultado')
       || normalizedMessage.includes('trigliceridos_resultado')
       || normalizedMessage.includes('colesterol_resultado')
       || normalizedMessage.includes('pantorrilla_cm')
       || normalizedMessage.includes('discapacidad')
     );
+};
+
+const getHealthSchemaErrorMessage = () => {
+  return 'Faltan columnas del formato Salud/Bienestar en Supabase. Ejecuta patient-health-fields.sql, medical-tests-shared-sample-fields.sql y medical-test-supplies.sql; despues recarga el schema.';
 };
 
 export const fetchPatients = async (): Promise<Person[]> => {
@@ -521,10 +500,14 @@ export const savePatient = async (person: Person, profile: Profile): Promise<Per
       .select('*')
       .single();
 
-    if (error && isExtensionSchemaCacheError(error.message)) {
+    if (error && isHealthSchemaCacheError(error.message)) {
+      throw new Error(getHealthSchemaErrorMessage());
+    }
+
+    if (error && isAuditSchemaCacheError(error.message)) {
       const retry = await supabase
         .from('patients')
-        .insert(removeSchemaExtensionFields(insertPayload))
+        .insert(removeAuditFields(insertPayload))
         .select('*')
         .single();
 
@@ -547,10 +530,14 @@ export const savePatient = async (person: Person, profile: Profile): Promise<Per
     .select('*')
     .single();
 
-  if (error && isExtensionSchemaCacheError(error.message)) {
+  if (error && isHealthSchemaCacheError(error.message)) {
+    throw new Error(getHealthSchemaErrorMessage());
+  }
+
+  if (error && isAuditSchemaCacheError(error.message)) {
     const retry = await supabase
       .from('patients')
-      .update(removeSchemaExtensionFields(updatePayload))
+      .update(removeAuditFields(updatePayload))
       .eq('id', person.id)
       .select('*')
       .single();

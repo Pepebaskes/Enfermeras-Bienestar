@@ -1,10 +1,12 @@
 import { useNavigate, useParams } from 'react-router';
+import { useEffect, useState } from 'react';
 import { Person } from '../models/person.model';
 import { StatusTags } from '../components/StatusTags';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { ArrowLeft, Edit, MapPin, Phone, Calendar, FileText, Clock, PlusCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import { fetchPatientById } from '../services/patientService';
 
 interface PersonDetailPageProps {
   persons: Person[];
@@ -15,7 +17,52 @@ export function PersonDetailPage({ persons, onRegisterNextVisit }: PersonDetailP
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const person = persons.find(p => p.id === id);
+  const localPerson = persons.find(p => p.id === id);
+  const [freshPerson, setFreshPerson] = useState<Person | undefined>(localPerson);
+  const [isLoadingFreshPerson, setIsLoadingFreshPerson] = useState(Boolean(id));
+  const person = freshPerson || localPerson;
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadFreshPerson = async () => {
+      if (!id) {
+        setIsLoadingFreshPerson(false);
+        return;
+      }
+
+      setIsLoadingFreshPerson(true);
+      try {
+        const loadedPerson = await fetchPatientById(id);
+        if (isMounted) {
+          setFreshPerson(loadedPerson);
+        }
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'No se pudo cargar la informacion actualizada';
+        toast.error(message);
+      } finally {
+        if (isMounted) {
+          setIsLoadingFreshPerson(false);
+        }
+      }
+    };
+
+    loadFreshPerson();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [id]);
+
+  if (isLoadingFreshPerson && !person) {
+    return (
+      <div className="p-4 md:p-6">
+        <div className="rounded-lg border bg-white p-6 text-center text-muted-foreground">
+          Cargando informacion actualizada del paciente...
+        </div>
+      </div>
+    );
+  }
 
   if (!person) {
     return (
@@ -36,6 +83,36 @@ export function PersonDetailPage({ persons, onRegisterNextVisit }: PersonDetailP
   const currentVisitNumber = person.numeroVisita || 0;
   const nextVisitNumber = currentVisitNumber + 1;
   const hasValue = (value: unknown) => value !== undefined && value !== null && value !== '';
+  const hasHealthData = [
+    person.edad,
+    person.pamOPcd,
+    person.enfermedades,
+    person.exploracionFisica,
+    person.diagnostico,
+    person.tratamiento,
+    person.taSistolica,
+    person.taDiastolica,
+    person.frecuenciaRespiratoria,
+    person.temperatura,
+    person.escalaGlasgow,
+    person.grupoRiesgo,
+    person.frecuenciaCardiaca,
+    person.peso,
+    person.talla,
+    person.saturacion,
+    person.pruebasHorasAyuno,
+    person.pruebasFechaHoraMuestra,
+    person.lancetasUsadas,
+    person.tirasUsadas,
+    person.glucosaResultado,
+    person.trigliceridosResultado,
+    person.colesterolResultado,
+    person.pantorrillaCm,
+    person.brazoCm,
+    person.cinturaCm,
+    person.discapacidad,
+    person.nota
+  ].some(hasValue);
   const renderField = (label: string, value: unknown) => hasValue(value) ? (
     <div>
       <span className="text-sm text-gray-600">{label}:</span>
@@ -52,6 +129,8 @@ export function PersonDetailPage({ persons, onRegisterNextVisit }: PersonDetailP
   const handleRegisterNextVisit = async () => {
     try {
       await onRegisterNextVisit(person.id);
+      const updatedPerson = await fetchPatientById(person.id);
+      setFreshPerson(updatedPerson);
       toast.success(`Visita ${nextVisitNumber} registrada`);
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Error al registrar la visita';
@@ -194,6 +273,19 @@ Teléfono: ${person.telefono || 'No disponible'}
         </Card>
       )}
 
+      {!hasHealthData && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Salud Casa por Casa / Bienestar</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-gray-600">
+              Este paciente todavia no tiene datos capturados del formato nuevo.
+            </p>
+          </CardContent>
+        </Card>
+      )}
+
       {(hasValue(person.edad) || hasValue(person.pamOPcd) || hasValue(person.grupoRiesgo) || hasValue(person.enfermedades)) && (
         <Card>
           <CardHeader>
@@ -240,26 +332,26 @@ Teléfono: ${person.telefono || 'No disponible'}
         </Card>
       )}
 
-      {(hasValue(person.glucosaResultado) || hasValue(person.trigliceridosResultado) || hasValue(person.colesterolResultado)) && (
+      {(hasValue(person.pruebasHorasAyuno) || hasValue(person.pruebasFechaHoraMuestra) || hasValue(person.lancetasUsadas) || hasValue(person.tirasUsadas) || hasValue(person.glucosaResultado) || hasValue(person.trigliceridosResultado) || hasValue(person.colesterolResultado)) && (
         <Card>
           <CardHeader>
             <CardTitle>Pruebas medicas</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 gap-3 rounded-md border p-3 sm:grid-cols-2">
+              {renderField('Horas de ayuno', person.pruebasHorasAyuno)}
+              {renderDateTimeField('Fecha y hora de muestra', person.pruebasFechaHoraMuestra)}
+              {renderField('Lancetas usadas', person.lancetasUsadas)}
+              {renderField('Tiras usadas', person.tirasUsadas)}
+            </div>
             <div className="grid grid-cols-1 gap-3 rounded-md border p-3 sm:grid-cols-3">
-              {renderField('Glucosa horas ayuno', person.glucosaHorasAyuno)}
               {renderField('Glucosa resultado', person.glucosaResultado)}
-              {renderDateTimeField('Glucosa muestra', person.glucosaFechaHoraMuestra)}
             </div>
             <div className="grid grid-cols-1 gap-3 rounded-md border p-3 sm:grid-cols-3">
-              {renderField('Trigliceridos horas ayuno', person.trigliceridosHorasAyuno)}
               {renderField('Trigliceridos resultado', person.trigliceridosResultado)}
-              {renderDateTimeField('Trigliceridos muestra', person.trigliceridosFechaHoraMuestra)}
             </div>
             <div className="grid grid-cols-1 gap-3 rounded-md border p-3 sm:grid-cols-3">
-              {renderField('Colesterol horas ayuno', person.colesterolHorasAyuno)}
               {renderField('Colesterol resultado', person.colesterolResultado)}
-              {renderDateTimeField('Colesterol muestra', person.colesterolFechaHoraMuestra)}
             </div>
           </CardContent>
         </Card>

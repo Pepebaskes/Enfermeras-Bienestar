@@ -43,6 +43,11 @@ const parseOptionalNumber = (value: string) => {
   return trimmedValue === '' ? undefined : Number(trimmedValue);
 };
 
+const parseOptionalInteger = (value: string) => {
+  const parsedValue = parseOptionalNumber(value);
+  return parsedValue === undefined ? undefined : Math.trunc(parsedValue);
+};
+
 const toDateTimeLocalInput = (value?: string) => {
   if (!value) {
     return '';
@@ -68,15 +73,20 @@ const numberFields = [
   'peso',
   'talla',
   'saturacion',
-  'glucosaHorasAyuno',
+  'pruebasHorasAyuno',
+  'lancetasUsadas',
+  'tirasUsadas',
   'glucosaResultado',
-  'trigliceridosHorasAyuno',
   'trigliceridosResultado',
-  'colesterolHorasAyuno',
   'colesterolResultado',
   'pantorrillaCm',
   'brazoCm',
   'cinturaCm'
+] as const;
+
+const countFields = [
+  'lancetasUsadas',
+  'tirasUsadas'
 ] as const;
 
 const vitalSignsFields = [
@@ -126,15 +136,13 @@ export function PersonForm({ person, responsibleName, onSave, onCancel, isSaving
     peso: inputValue(person?.peso),
     talla: inputValue(person?.talla),
     saturacion: inputValue(person?.saturacion),
-    glucosaHorasAyuno: inputValue(person?.glucosaHorasAyuno),
+    pruebasHorasAyuno: inputValue(person?.pruebasHorasAyuno),
+    pruebasFechaHoraMuestra: toDateTimeLocalInput(person?.pruebasFechaHoraMuestra),
+    lancetasUsadas: inputValue(person?.lancetasUsadas),
+    tirasUsadas: inputValue(person?.tirasUsadas),
     glucosaResultado: inputValue(person?.glucosaResultado),
-    glucosaFechaHoraMuestra: toDateTimeLocalInput(person?.glucosaFechaHoraMuestra),
-    trigliceridosHorasAyuno: inputValue(person?.trigliceridosHorasAyuno),
     trigliceridosResultado: inputValue(person?.trigliceridosResultado),
-    trigliceridosFechaHoraMuestra: toDateTimeLocalInput(person?.trigliceridosFechaHoraMuestra),
-    colesterolHorasAyuno: inputValue(person?.colesterolHorasAyuno),
     colesterolResultado: inputValue(person?.colesterolResultado),
-    colesterolFechaHoraMuestra: toDateTimeLocalInput(person?.colesterolFechaHoraMuestra),
     pantorrillaCm: inputValue(person?.pantorrillaCm),
     brazoCm: inputValue(person?.brazoCm),
     cinturaCm: inputValue(person?.cinturaCm),
@@ -189,6 +197,13 @@ export function PersonForm({ person, responsibleName, onSave, onCancel, isSaving
       }
     });
 
+    countFields.forEach((field) => {
+      const value = String(formData[field] ?? '').trim();
+      if (value !== '' && !Number.isInteger(Number(value))) {
+        validationErrors.push({ field, message: 'Ingresa un numero entero' });
+      }
+    });
+
     if (validationErrors.length > 0) {
       const errorMap: Record<string, string> = {};
       validationErrors.forEach(error => {
@@ -235,15 +250,13 @@ export function PersonForm({ person, responsibleName, onSave, onCancel, isSaving
       peso: parseOptionalNumber(String(formData.peso)),
       talla: parseOptionalNumber(String(formData.talla)),
       saturacion: parseOptionalNumber(String(formData.saturacion)),
-      glucosaHorasAyuno: parseOptionalNumber(String(formData.glucosaHorasAyuno)),
+      pruebasHorasAyuno: parseOptionalNumber(String(formData.pruebasHorasAyuno)),
+      pruebasFechaHoraMuestra: formData.pruebasFechaHoraMuestra || undefined,
+      lancetasUsadas: parseOptionalInteger(String(formData.lancetasUsadas)),
+      tirasUsadas: parseOptionalInteger(String(formData.tirasUsadas)),
       glucosaResultado: parseOptionalNumber(String(formData.glucosaResultado)),
-      glucosaFechaHoraMuestra: formData.glucosaFechaHoraMuestra || undefined,
-      trigliceridosHorasAyuno: parseOptionalNumber(String(formData.trigliceridosHorasAyuno)),
       trigliceridosResultado: parseOptionalNumber(String(formData.trigliceridosResultado)),
-      trigliceridosFechaHoraMuestra: formData.trigliceridosFechaHoraMuestra || undefined,
-      colesterolHorasAyuno: parseOptionalNumber(String(formData.colesterolHorasAyuno)),
       colesterolResultado: parseOptionalNumber(String(formData.colesterolResultado)),
-      colesterolFechaHoraMuestra: formData.colesterolFechaHoraMuestra || undefined,
       pantorrillaCm: parseOptionalNumber(String(formData.pantorrillaCm)),
       brazoCm: parseOptionalNumber(String(formData.brazoCm)),
       cinturaCm: parseOptionalNumber(String(formData.cinturaCm)),
@@ -287,6 +300,25 @@ export function PersonForm({ person, responsibleName, onSave, onCancel, isSaving
         value={String(formData[field] ?? '')}
         onChange={(e) => handleChange(String(field), e.target.value)}
         placeholder={placeholder}
+        className={`min-h-12 border-sky-200 bg-sky-50/80 py-3 text-base leading-6 shadow-sm focus-visible:border-sky-500 ${errors[String(field)] ? 'border-red-500' : ''}`}
+      />
+      {errors[String(field)] && (
+        <p className="text-sm leading-5 text-red-500">{errors[String(field)]}</p>
+      )}
+    </div>
+  );
+
+  const renderCountInput = (field: keyof typeof formData, label: string) => (
+    <div className="min-w-0 space-y-2">
+      <Label htmlFor={String(field)} className="block text-sm leading-5 text-foreground">{label}</Label>
+      <Input
+        id={String(field)}
+        type="number"
+        inputMode="numeric"
+        min={0}
+        step={1}
+        value={String(formData[field] ?? '')}
+        onChange={(e) => handleChange(String(field), e.target.value)}
         className={`min-h-12 border-sky-200 bg-sky-50/80 py-3 text-base leading-6 shadow-sm focus-visible:border-sky-500 ${errors[String(field)] ? 'border-red-500' : ''}`}
       />
       {errors[String(field)] && (
@@ -575,57 +607,40 @@ export function PersonForm({ person, responsibleName, onSave, onCancel, isSaving
           <CardTitle className="text-lg leading-tight">4. Pruebas medicas</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6 px-4 pb-4 sm:px-6 sm:pb-6">
+          <div className="grid grid-cols-1 gap-5 rounded-md border bg-muted/20 p-3 sm:grid-cols-2">
+            {renderNumberInput('pruebasHorasAyuno', 'Horas de ayuno')}
+            <div className="min-w-0 space-y-2">
+              <Label htmlFor="pruebasFechaHoraMuestra" className="block text-sm leading-5 text-foreground">Fecha y hora de muestra</Label>
+              <Input
+                id="pruebasFechaHoraMuestra"
+                type="datetime-local"
+                value={formData.pruebasFechaHoraMuestra}
+                onChange={(e) => handleChange('pruebasFechaHoraMuestra', e.target.value)}
+                className="min-h-12 border-sky-200 bg-sky-50/80 py-3 text-base leading-6 shadow-sm focus-visible:border-sky-500"
+              />
+            </div>
+            {renderCountInput('lancetasUsadas', 'Lancetas usadas')}
+            {renderCountInput('tirasUsadas', 'Tiras usadas')}
+          </div>
+
           <div className="space-y-3 rounded-md border bg-muted/20 p-3">
             <p className="text-sm font-medium">Glucosa</p>
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
-              {renderNumberInput('glucosaHorasAyuno', 'Horas de ayuno')}
+            <div className="grid grid-cols-1 gap-5">
               {renderNumberInput('glucosaResultado', 'Resultado')}
-              <div className="min-w-0 space-y-2">
-                <Label htmlFor="glucosaFechaHoraMuestra" className="block text-sm leading-5 text-foreground">Fecha y hora de muestra</Label>
-                <Input
-                  id="glucosaFechaHoraMuestra"
-                  type="datetime-local"
-                  value={formData.glucosaFechaHoraMuestra}
-                  onChange={(e) => handleChange('glucosaFechaHoraMuestra', e.target.value)}
-                  className="min-h-12 border-sky-200 bg-sky-50/80 py-3 text-base leading-6 shadow-sm focus-visible:border-sky-500"
-                />
-              </div>
             </div>
           </div>
 
           <div className="space-y-3 rounded-md border bg-muted/20 p-3">
             <p className="text-sm font-medium">Trigliceridos</p>
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
-              {renderNumberInput('trigliceridosHorasAyuno', 'Horas de ayuno')}
+            <div className="grid grid-cols-1 gap-5">
               {renderNumberInput('trigliceridosResultado', 'Resultado')}
-              <div className="min-w-0 space-y-2">
-                <Label htmlFor="trigliceridosFechaHoraMuestra" className="block text-sm leading-5 text-foreground">Fecha y hora de muestra</Label>
-                <Input
-                  id="trigliceridosFechaHoraMuestra"
-                  type="datetime-local"
-                  value={formData.trigliceridosFechaHoraMuestra}
-                  onChange={(e) => handleChange('trigliceridosFechaHoraMuestra', e.target.value)}
-                  className="min-h-12 border-sky-200 bg-sky-50/80 py-3 text-base leading-6 shadow-sm focus-visible:border-sky-500"
-                />
-              </div>
             </div>
           </div>
 
           <div className="space-y-3 rounded-md border bg-muted/20 p-3">
             <p className="text-sm font-medium">Colesterol</p>
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
-              {renderNumberInput('colesterolHorasAyuno', 'Horas de ayuno')}
+            <div className="grid grid-cols-1 gap-5">
               {renderNumberInput('colesterolResultado', 'Resultado')}
-              <div className="min-w-0 space-y-2">
-                <Label htmlFor="colesterolFechaHoraMuestra" className="block text-sm leading-5 text-foreground">Fecha y hora de muestra</Label>
-                <Input
-                  id="colesterolFechaHoraMuestra"
-                  type="datetime-local"
-                  value={formData.colesterolFechaHoraMuestra}
-                  onChange={(e) => handleChange('colesterolFechaHoraMuestra', e.target.value)}
-                  className="min-h-12 border-sky-200 bg-sky-50/80 py-3 text-base leading-6 shadow-sm focus-visible:border-sky-500"
-                />
-              </div>
             </div>
           </div>
         </CardContent>
